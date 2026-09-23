@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRoleRequest;
+use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Role;
 use App\Services\RolesServices;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class RoleController extends Controller
 { 
@@ -63,4 +63,11 @@ class RoleController extends Controller
         ]);
     }
 
+    public function update(UpdateRoleRequest $request, Role $role): JsonResponse
+    {
+        return response()->json([
+            'message' => 'Rol actualizado correctamente.',
+            'data' => $this->roleService->update($role, $request->validated()),
+        ]);
+    }
 }
