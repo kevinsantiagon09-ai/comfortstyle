@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Role;
 use App\Services\RolesServices;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class RoleController extends Controller
 { 
@@ -17,12 +18,11 @@ class RoleController extends Controller
         $this->roleService = $roleService;
     }
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $roles = Role::query()
-            ->where('is_active', true)
-            ->orderBy('name')
-            ->get();
+        $roles = $request->boolean('solo_activos')
+            ? $this->roleService->getActive()
+            : $this->roleService->getAll();
 
         return response()->json([
             'message' => 'Roles consultados correctamente.',
@@ -45,21 +45,6 @@ class RoleController extends Controller
         return response()->json([
             'message' => 'Rol consultado correctamente.',
             'data' => $role,
-        ]);
-    }
-
-    public function destroy(Role $role): JsonResponse
-    {
-        if ($role->name === 'SYSTEM ADMIN') {
-            return response()->json([
-                'message' => 'No se puede eliminar el rol de administrador del sistema.',
-            ], 409);
-        }
-
-        $role->delete();
-
-        return response()->json([
-            'message' => 'Rol eliminado correctamente.',
         ]);
     }
 

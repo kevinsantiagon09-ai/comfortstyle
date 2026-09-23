@@ -3,65 +3,65 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreEstadoRequest;
+use App\Http\Requests\UpdateEstadoRequest;
 use App\Models\Estado;
+use App\Services\EstadoService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
 
 class EstadoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function __construct(
+        private readonly EstadoService $estadoService
+    ) {
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function index(Request $request): JsonResponse
     {
-        //
+        $estados = $request->boolean('solo_activos')
+            ? $this->estadoService->getActive()
+            : $this->estadoService->getAll();
+
+        return response()->json([
+            'message' => 'Estados obtenidos correctamente.',
+            'data' => $estados,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    public function store(
+        StoreEstadoRequest $request
+    ): JsonResponse {
+        $estado = $this->estadoService->create(
+            $request->validated()
+        );
+
+        return response()->json([
+            'message' => 'Estado creado correctamente.',
+            'data' => $estado,
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Estado $estado)
+    public function show(Estado $estado): JsonResponse
     {
-        //
+        return response()->json([
+            'message' => 'Estado obtenido correctamente.',
+            'data' => $estado,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Estado $estado)
-    {
-        //
-    }
+    public function update(
+        UpdateEstadoRequest $request,
+        Estado $estado
+    ): JsonResponse {
+        $estado = $this->estadoService->update(
+            $estado,
+            $request->validated()
+        );
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Estado $estado)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Estado $estado)
-    {
-        //
+        return response()->json([
+            'message' => 'Estado actualizado correctamente.',
+            'data' => $estado,
+        ]);
     }
 }

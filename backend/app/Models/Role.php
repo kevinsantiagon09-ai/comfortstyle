@@ -16,7 +16,7 @@ class Role extends Model
         'is_active',
     ];
 
-    protected function cats(): array 
+    protected function casts(): array
     {
         return [
             'is_active' => 'boolean',

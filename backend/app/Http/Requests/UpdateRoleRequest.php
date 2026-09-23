@@ -33,6 +33,7 @@ class UpdateRoleRequest extends FormRequest
 
         return [
             'name' => [
+                'sometimes',
                 'required',
                 'string',
                 'max:50',

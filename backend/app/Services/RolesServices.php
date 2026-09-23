@@ -8,7 +8,14 @@ use Illuminate\Validation\ValidationException;
 
 class RolesServices
 {
-    public function getActiveRoles(): Collection
+    public function getAll(): Collection
+    {
+        return Role::query()
+            ->orderBy('name')
+            ->get();
+    }
+
+    public function getActive(): Collection
     {
         return Role::query()
             ->where('is_active', true)
@@ -23,21 +30,19 @@ class RolesServices
 
     public function update(Role $role, array $data): Role
     {
-        $role->update($data);
+        $desactivando = array_key_exists('is_active', $data)
+            && ! filter_var($data['is_active'], FILTER_VALIDATE_BOOLEAN);
 
-        return $role->fresh();
-    }
-
-    public function delete(Role $role): void
-    {
-        if ($role->name === 'SYSTEM_ADMIN') {
+        if ($desactivando && $role->name === 'SYSTEM_ADMIN') {
             throw ValidationException::withMessages([
-                'role' => [
-                    'El rol principal del sistema no puede eliminarse.',
+                'is_active' => [
+                    'El rol principal del sistema no puede desactivarse.',
                 ],
             ]);
         }
 
-        $role->delete();
+        $role->update($data);
+
+        return $role->fresh();
     }
 }
