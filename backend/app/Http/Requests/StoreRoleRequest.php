@@ -45,7 +45,7 @@ class StoreRoleRequest extends FormRequest
     {
         return [
             'name.required' => 'El nombre del rol es obligatorio.',
-            'name.max' => 'El nombre del rol no puede superar 50 caracteres.',
+            'name.max' => 'El nombre de rol no puede superar 50 caracteres.',
             'name.unique' => 'Ya existe un rol con este nombre.',
             'description.max' => 'La descripción no puede superar 255 caracteres.',
             'is_active.boolean' => 'El estado del rol debe ser verdadero o falso.',
