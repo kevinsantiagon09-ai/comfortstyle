@@ -11,18 +11,11 @@ return new class extends Migration
         Schema::create('estados', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->string('codigo', 50);
-            $table->string('nombre', 100);
-            $table->string('modulo', 50);
             $table->string('descripcion', 255)->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
             
-            $table->unique(
-                ['codigo', 'modulo'],
-                'estados_codigo_modulo_unique'
-            );
         });
     }
 

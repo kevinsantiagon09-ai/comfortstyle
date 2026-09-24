@@ -17,6 +17,14 @@ use Illuminate\Notifications\Notifiable;
     'name',
     'email',
     'password',
+    'uuid',
+    'first_name',
+    'last_name',
+    'phone_number',
+    'address',
+    'city',
+    'status_id',    
+
 ])]
 #[Hidden([
     'password',
@@ -43,6 +51,14 @@ class User extends Authenticatable
         ]);
     }
 
+//Funcion para generar un UUID único para el usuario antes de guardarlo en la base de datos
+    protected static function booted()  
+    {
+        static::creating(function ($user) {
+            $user->uuid = (string) \Illuminate\Support\Str::uuid();
+        });
+    }
+
     /**
      * Conversión automática de atributos.
      *
@@ -54,5 +70,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(Estado::class, 'status_id');
     }
 }
