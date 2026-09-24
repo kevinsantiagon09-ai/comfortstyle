@@ -75,26 +75,4 @@ class PropertyService
             }
         );
     }
-
-    public function activate(Property $property): Property
-    {
-        $property->update([
-            'is_active' => true,
-        ]);
-
-        return $property
-            ->fresh()
-            ->load('host:id,uuid,name,email');
-    }
-
-    public function deactivate(Property $property): Property
-    {
-        $property->update([
-            'is_active' => false,
-        ]);
-
-        return $property
-            ->fresh()
-            ->load('host:id,uuid,name,email');
-    }
 }
