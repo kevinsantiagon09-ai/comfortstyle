@@ -4,6 +4,11 @@ namespace App\Services\Auth;
 
 class UsersService
 {
+    public function create(array $userData)
+    {
+        return \App\Models\User::create($userData);
+    }
+
     public function getUserRoles($userId)
     {
         $user = \App\Models\User::find($userId);

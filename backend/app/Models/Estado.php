@@ -12,9 +12,6 @@ class Estado extends Model
 
     protected $fillable = [
         'uuid',
-        'codigo',
-        'nombre',
-        'modulo',
         'descripcion',
         'is_active',
     ];

@@ -22,12 +22,12 @@ class StoreUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8'],
-            'first_name' => ['nullable', 'string', 'max:255'],
-            'last_name' => ['nullable', 'string', 'max:255'],
-            'phone_number' => ['nullable', 'string', 'max:20'],
-            'address' => ['nullable', 'string', 'max:255'],
-            'city' => ['nullable', 'string', 'max:100'],
-            'status_id' => ['nullable', 'integer'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'phone_number' => ['required', 'string', 'max:20'],
+            'address' => ['required', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:100'],
+            'status_id' => ['required', 'integer'],
         ];
     }
 
@@ -35,10 +35,8 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'name.required' => 'El campo name es obligatorio.',
-            'name.string' => 'El campo name debe ser una cadena de texto.',
             'name.max' => 'El campo name no debe exceder los 255 caracteres.',
             'email.required' => 'El campo email es obligatorio.',
-            'email.string' => 'El campo email debe ser una cadena de texto.',
             'email.email' => 'El campo email debe ser una dirección de correo electrónico válida.',
             'email.max' => 'El campo email no debe exceder los 255 caracteres.',
             'email.unique' => 'El correo electrónico ya está en uso.',
@@ -46,7 +44,6 @@ class StoreUserRequest extends FormRequest
             'password.string' => 'El campo password debe ser una cadena de texto.',
             'password.min' => 'El campo password debe tener al menos 8 caracteres.',
             // Mensajes para los campos opcionales
-            'first_name.string' => 'El campo first_name debe ser una cadena de texto.',
             'first_name.max' => 'El campo first_name no debe exceder los 255 caracteres.',
             'last_name.string' => 'El campo last_name debe ser una cadena de texto.',
             'last_name.max' => 'El campo last_name no debe exceder los 255 caracteres.',

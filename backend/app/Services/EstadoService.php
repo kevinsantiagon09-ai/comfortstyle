@@ -10,8 +10,7 @@ class EstadoService
     public function getAll(): Collection
     {
         return Estado::query()
-            ->orderBy('modulo')
-            ->orderBy('nombre')
+            ->orderBy('descripcion')
             ->get();
     }
 
@@ -19,8 +18,7 @@ class EstadoService
     {
         return Estado::query()
             ->where('is_active', true)
-            ->orderBy('modulo')
-            ->orderBy('nombre')
+            ->orderBy('descripcion')
             ->get();
     }
 
@@ -29,8 +27,10 @@ class EstadoService
         return Estado::create($data);
     }
 
-    public function update(Estado $estado, array $data): Estado
-    {
+    public function update(
+        Estado $estado,
+        array $data
+    ): Estado {
         $estado->update($data);
 
         return $estado->fresh();
