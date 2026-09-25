@@ -14,35 +14,24 @@ return new class extends Migration
         Schema::create('properties', function (Blueprint $table) {
     $table->id();
     $table->uuid('uuid')->unique();
-
     $table->foreignId('user_id')    
         ->constrained('users')
         ->restrictOnDelete();
-
     $table->string('name', 150);
     $table->text('description');
     $table->string('property_type', 50);
-
     $table->string('address', 255);
     $table->string('department', 100);
     $table->string('city', 100);
-
-    $table->decimal('latitude', 10, 7)->nullable();
-    $table->decimal('longitude', 10, 7)->nullable();
-
     $table->unsignedSmallInteger('max_guests');
     $table->unsignedSmallInteger('bathrooms')->default(1);
     $table->unsignedSmallInteger('bedrooms')->default(1);
     $table->unsignedSmallInteger('beds')->default(1);
-
-    $table->decimal('base_price', 12, 2);
+    $table->decimal('price');
     $table->string('currency', 3)->default('COP');
-
     $table->time('check_in_time')->nullable();
     $table->time('check_out_time')->nullable();
-
     $table->boolean('is_active')->default(true);
-
     $table->timestamps();
     $table->softDeletes();
 

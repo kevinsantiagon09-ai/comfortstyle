@@ -28,7 +28,7 @@ class Property extends Model
         'bathrooms',
         'bedrooms',
         'beds',
-        'base_price',
+        'price',
         'currency',
         'check_in_time',
         'check_out_time',
@@ -38,13 +38,11 @@ class Property extends Model
     protected function casts(): array
     {
         return [
-            'latitude' => 'decimal:7',
-            'longitude' => 'decimal:7',
             'max_guests' => 'integer',
             'bathrooms' => 'integer',
             'bedrooms' => 'integer',
             'beds' => 'integer',
-            'base_price' => 'decimal:2',
+            'price' => 'decimal:2',
             'is_active' => 'boolean',
         ];
     }

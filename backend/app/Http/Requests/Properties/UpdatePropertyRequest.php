@@ -75,20 +75,6 @@ class UpdatePropertyRequest extends FormRequest
                 'max:100',
             ],
 
-            'latitude' => [
-                'sometimes',
-                'nullable',
-                'numeric',
-                'between:-90,90',
-            ],
-
-            'longitude' => [
-                'sometimes',
-                'nullable',
-                'numeric',
-                'between:-180,180',
-            ],
-
             'max_guests' => [
                 'sometimes',
                 'required',
@@ -121,7 +107,7 @@ class UpdatePropertyRequest extends FormRequest
                 'max:200',
             ],
 
-            'base_price' => [
+            'price' => [
                 'sometimes',
                 'required',
                 'numeric',
@@ -183,12 +169,6 @@ class UpdatePropertyRequest extends FormRequest
             'city.required' => 'La ciudad es obligatoria.',
             'city.max' => 'La ciudad no puede superar los 100 caracteres.',
 
-            'latitude.numeric' => 'La latitud debe ser numérica.',
-            'latitude.between' => 'La latitud debe estar entre -90 y 90.',
-
-            'longitude.numeric' => 'La longitud debe ser numérica.',
-            'longitude.between' => 'La longitud debe estar entre -180 y 180.',
-
             'max_guests.required' => 'La capacidad máxima es obligatoria.',
             'max_guests.integer' => 'La capacidad máxima debe ser un número entero.',
             'max_guests.min' => 'La propiedad debe aceptar al menos un huésped.',
@@ -202,9 +182,9 @@ class UpdatePropertyRequest extends FormRequest
             'beds.integer' => 'La cantidad de camas debe ser un número entero.',
             'beds.min' => 'Debe existir al menos una cama.',
 
-            'base_price.required' => 'El precio base es obligatorio.',
-            'base_price.numeric' => 'El precio base debe ser numérico.',
-            'base_price.min' => 'El precio base no puede ser negativo.',
+            'price.required' => 'El precio base es obligatorio.',
+            'price.numeric' => 'El precio base debe ser numérico.',
+            'price.min' => 'El precio base no puede ser negativo.',
 
             'currency.size' => 'La moneda debe tener exactamente tres caracteres.',
             'currency.in' => 'La moneda debe ser COP, USD o EUR.',

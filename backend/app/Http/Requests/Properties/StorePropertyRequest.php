@@ -68,18 +68,6 @@ class StorePropertyRequest extends FormRequest
                 'max:100',
             ],
 
-            'latitude' => [
-                'nullable',
-                'numeric',
-                'between:-90,90',
-            ],
-
-            'longitude' => [
-                'nullable',
-                'numeric',
-                'between:-180,180',
-            ],
-
             'max_guests' => [
                 'required',
                 'integer',
@@ -108,7 +96,7 @@ class StorePropertyRequest extends FormRequest
                 'max:200',
             ],
 
-            'base_price' => [
+            'price' => [
                
                 'numeric',
                 'min:0',
@@ -156,8 +144,6 @@ class StorePropertyRequest extends FormRequest
             'department.required' => 'El departamento es obligatorio.',
             'city.required' => 'La ciudad es obligatoria.',
 
-            'latitude.between' => 'La latitud debe estar entre -90 y 90.',
-            'longitude.between' => 'La longitud debe estar entre -180 y 180.',
 
             'max_guests.required' => 'La capacidad máxima de huéspedes es obligatoria.',
             'max_guests.min' => 'La propiedad debe aceptar al menos un huésped.',
@@ -166,9 +152,9 @@ class StorePropertyRequest extends FormRequest
             'bedrooms.min' => 'Debe existir al menos una habitación.',
             'beds.min' => 'Debe existir al menos una cama.',
 
-            'base_price.required' => 'El precio base es obligatorio.',
-            'base_price.numeric' => 'El precio base debe ser numérico.',
-            'base_price.min' => 'El precio base no puede ser negativo.',
+            'price.required' => 'El precio base es obligatorio.',
+            'price.numeric' => 'El precio base debe ser numérico.',
+            'price.min' => 'El precio base no puede ser negativo.',
 
             'currency.size' => 'La moneda debe tener exactamente tres caracteres.',
             'currency.in' => 'La moneda debe ser COP, USD o EUR.',

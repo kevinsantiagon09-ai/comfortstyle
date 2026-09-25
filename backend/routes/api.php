@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Api\EstadoController;
+use App\Http\Controllers\Api\PropertyImageController;
 use App\Http\Controllers\Api\PropertyController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Auth\UserController;
@@ -13,8 +14,6 @@ Route::get('/user', function (Request $request) {
 Route::apiResource('roles',RoleController::class)->except(['destroy']);
 Route::apiResource('estados',EstadoController::class)->except(['destroy']);
 Route::apiResource('users',UserController::class)->except(['destroy']);
-Route::post(
-    '/properties',
-    [PropertyController::class, 'store']
-);
+Route::apiResource('property',PropertyController::class);
+Route::apiResource('property-images',PropertyImageController::class);
 
