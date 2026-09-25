@@ -4,7 +4,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use App\Http\Controllers\Api\RoleController;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -12,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 #[Fillable([
     'name',
@@ -23,7 +23,7 @@ use Illuminate\Notifications\Notifiable;
     'phone_number',
     'address',
     'city',
-    'status_id',    
+    'status_id',
 
 ])]
 #[Hidden([
@@ -41,7 +41,7 @@ class User extends Authenticatable
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(
-            RoleController::class,
+            Role::class,
             'user_roles',
             'user_id',
             'role_id'
@@ -51,11 +51,11 @@ class User extends Authenticatable
         ]);
     }
 
-//Funcion para generar un UUID único para el usuario antes de guardarlo en la base de datos
-    protected static function booted()  
+    // Funcion para generar un UUID único para el usuario antes de guardarlo en la base de datos
+    protected static function booted()
     {
         static::creating(function ($user) {
-            $user->uuid = (string) \Illuminate\Support\Str::uuid();
+            $user->uuid = (string) Str::uuid();
         });
     }
 
@@ -75,5 +75,12 @@ class User extends Authenticatable
     public function status()
     {
         return $this->belongsTo(Estado::class, 'status_id');
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->roles()
+            ->where('name', strtoupper($role))
+            ->exists();
     }
 }

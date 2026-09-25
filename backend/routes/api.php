@@ -1,7 +1,8 @@
 <?php
 use App\Http\Controllers\Api\EstadoController;
-use App\Http\Controllers\Api\PropertyImageController;
 use App\Http\Controllers\Api\PropertyController;
+use App\Http\Controllers\Api\PropertyImageController;
+use App\Http\Controllers\Api\PublicPropertyController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Auth\UserController;
 use Illuminate\Http\Request;
@@ -16,4 +17,7 @@ Route::apiResource('estados',EstadoController::class)->except(['destroy']);
 Route::apiResource('users',UserController::class)->except(['destroy']);
 Route::apiResource('property',PropertyController::class);
 Route::apiResource('property-images',PropertyImageController::class);
+
+Route::get('/public/properties', [ PublicPropertyController::class, 'index',]);
+Route::get('/public/properties/{property}', [ PublicPropertyController::class, 'show',]);
 

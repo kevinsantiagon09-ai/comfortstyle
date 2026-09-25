@@ -14,7 +14,15 @@ class PropertyService
         bool $onlyActive = false
     ): LengthAwarePaginator {
         return Property::query()
-            ->with('host:id,uuid,name,email')
+            ->with([
+    'host:id,uuid,name,email',
+
+    'images' => function ($query) {
+        $query
+            ->where('is_active', true)
+            ->orderBy('display_order');
+    },
+])
             ->when($onlyActive, function ($query) {
                 $query->where('is_active', true);
             })

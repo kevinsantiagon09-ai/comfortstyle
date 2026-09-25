@@ -22,6 +22,7 @@ class PropertyImageController extends Controller
     }
 
     public function index(Request $request): JsonResponse
+    
     {
         $validated = $request->validate([
             'property_id' => [

@@ -5,9 +5,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
-use Override;
+
 
 class PropertyImage extends Model
 {
@@ -41,13 +42,21 @@ class PropertyImage extends Model
         });
     }
 
-    public function property(): BelongsTo
-    {
-        return $this->belongsTo(
-            Property::class,
-            'property_id'
-        );
-    }
-    
+   public function host(): BelongsTo
+{
+    return $this->belongsTo(
+        User::class,
+        'user_id'
+    );
 }
+
+public function images(): HasMany
+{
+    return $this->hasMany(
+        PropertyImage::class,
+        'property_id'
+    )->orderBy('display_order');
+}
+}
+
 
