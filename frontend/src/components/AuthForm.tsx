@@ -4,6 +4,7 @@ import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import type { UserRole } from '../types/auth';
 import Navbar from './Navbar';
+import PasswordField from './PasswordField';
 
 export default function AuthForm({ registerMode = false }: { registerMode?: boolean }) {
     const { login, register, user, loading } = useAuth();
@@ -47,10 +48,10 @@ export default function AuthForm({ registerMode = false }: { registerMode?: bool
             <form onSubmit={(event) => void submit(event)} className="space-y-4">
                 {registerMode && <label className="block">Nombre<input className={inputClass} name="name" autoComplete="name" required maxLength={255} /></label>}
                 <label className="block">Correo electrónico<input className={inputClass} name="email" type="email" autoComplete="email" required /></label>
-                <label className="block">Contraseña<input className={inputClass} name="password" type="password" autoComplete={registerMode ? 'new-password' : 'current-password'} required minLength={registerMode ? 8 : undefined} /></label>
+                <PasswordField label="Contraseña" name="password" autoComplete={registerMode ? 'new-password' : 'current-password'} minLength={registerMode ? 8 : undefined} />
                 {registerMode && <>
                     <p className="text-sm text-slate-600">Usa al menos 8 caracteres, incluyendo letras y números.</p>
-                    <label className="block">Confirmar contraseña<input className={inputClass} name="password_confirmation" type="password" autoComplete="new-password" required minLength={8} /></label>
+                    <PasswordField label="Confirmar contraseña" name="password_confirmation" autoComplete="new-password" minLength={8} />
                     <label className="block">Tipo de cuenta<select className={inputClass} name="role" defaultValue="ARRENDATARIO"><option value="ARRENDATARIO">Huésped</option><option value="ARRENDADOR">Anfitrión</option></select></label>
                 </>}
                 {error && <p role="alert" className="text-red-700">{error}</p>}
