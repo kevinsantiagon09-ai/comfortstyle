@@ -62,8 +62,8 @@ class RegisterRequest extends FormRequest
             'role' => [
                 'required',
                 Rule::in([
-                    'ARRENDATARIO',
-                    'ARRENDADOR',
+                    'HUESPED',
+                    'ANFITRION',
                 ]),
             ],
         ];

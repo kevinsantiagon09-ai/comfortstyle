@@ -33,7 +33,7 @@ export async function register(
 export async function logout(): Promise<void> {
     await http.post('/logout');
 }
-export async function me(): Promise<AuthUser> {
-    const response = await http.get<{ data: AuthUser }>('/me');
+export async function me(signal?: AbortSignal): Promise<AuthUser> {
+    const response = await http.get<{ data: AuthUser }>('/me', { signal });
     return response.data.data;
 }

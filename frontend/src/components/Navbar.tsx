@@ -1,19 +1,8 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { useNavbar } from '../hooks/useNavbar';
 
 export default function Navbar() {
-    const {
-        user,
-        isAuthenticated,
-        logout,
-    } = useAuth();
-
-    const [error, setError] = useState('');
-    const handleLogout = async () => {
-        setError('');
-        try { await logout(); } catch { setError('No fue posible cerrar sesión. Inténtalo de nuevo.'); }
-    };
+    const { user, isAuthenticated, handleLogout, pending, error } = useNavbar();
 
     return (
         <header className="border-b border-slate-200 bg-white">
@@ -34,10 +23,11 @@ export default function Navbar() {
 
                             <button
                                 type="button"
-                                onClick={() => void handleLogout()}
+                                onClick={handleLogout}
+                                disabled={pending}
                                 className="rounded-full border px-4 py-2"
                             >
-                                Cerrar sesión
+                                {pending ? 'Cerrando sesión...' : 'Cerrar sesión'}
                             </button>
                         </>
                     ) : (

@@ -1,4 +1,4 @@
-import { fallbackImage, propertyImageUrl } from '../utils/imageUrl';
+import { usePropertyCard } from '../hooks/usePropertyCard';
 import type { Property } from '../types/property';
 
 interface PropertyCardProps {
@@ -8,11 +8,7 @@ interface PropertyCardProps {
 export default function PropertyCard({
     property,
 }: PropertyCardProps) {
-    const coverImage =
-        property.images?.find((image) => image.is_cover) ??
-        property.images?.[0];
-
-    const imageUrl = propertyImageUrl(coverImage?.image_path);
+    const { imageUrl, imageAlt, formattedPrice, handleImageError } = usePropertyCard(property);
 
     return (
         <article className="overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
@@ -20,12 +16,8 @@ export default function PropertyCard({
                 key={imageUrl}
                 src={imageUrl}
                 loading="lazy"
-                onError={(event) => {
-                    if (event.currentTarget.getAttribute('src') !== fallbackImage) {
-                        event.currentTarget.src = fallbackImage;
-                    }
-                }}
-                alt={coverImage?.caption ?? property.name}
+                onError={handleImageError}
+                alt={imageAlt}
                 className="h-56 w-full object-cover"
             />
 
@@ -50,7 +42,7 @@ export default function PropertyCard({
 
                 <p className="pt-2 text-slate-900">
                     <strong>
-                        ${Number(property.price).toLocaleString('es-CO')}
+                        ${formattedPrice}
                     </strong>{' '}
                     {property.currency} por noche
                 </p>

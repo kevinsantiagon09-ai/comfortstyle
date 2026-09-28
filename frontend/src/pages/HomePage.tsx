@@ -1,5 +1,5 @@
-import Navbar from '../componets/Navbar';
-import PropertyCard from '../componets/PropertyCard';
+import Navbar from '../components/Navbar';
+import PropertyCard from '../components/PropertyCard';
 import { useProperties } from '../hooks/useProperties';
 
 export default function HomePage() {

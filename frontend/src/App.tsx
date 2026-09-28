@@ -27,7 +27,7 @@ export default function App() {
                 <Route element={<ProtectedRoute />}>
                     <Route
                         element={
-                            <RoleRoute allowedRole="ARRENDATARIO" />
+                            <RoleRoute allowedRole="HUESPED" />
                         }
                     >
                         <Route element={<GuestLayout />}>
@@ -40,7 +40,7 @@ export default function App() {
 
                     <Route
                         element={
-                            <RoleRoute allowedRole="ARRENDADOR" />
+                            <RoleRoute allowedRole="ANFITRION" />
                         }
                     >
                         <Route element={<HostLayout />}>
