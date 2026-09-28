@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { useRoleAccess } from '../hooks/useRoleAccess';
 import type { UserRole } from '../types/auth';
 
 interface RoleRouteProps {
@@ -9,11 +9,7 @@ interface RoleRouteProps {
 export default function RoleRoute({
     allowedRole,
 }: RoleRouteProps) {
-    const { user } = useAuth();
-
-    const hasRole = user?.roles.some(
-        (role) => role.name === allowedRole
-    );
+    const hasRole = useRoleAccess(allowedRole);
 
     if (!hasRole) {
         return <Navigate to="/" replace />;

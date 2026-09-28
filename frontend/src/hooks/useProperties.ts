@@ -1,27 +1,20 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { getProperties } from '../api/properties.api';
-import type { Property } from '../types/property';
 
 export function useProperties() {
-    const [properties, setProperties] = useState<Property[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [request, setRequest] = useState(0);
-    const reload = useCallback(() => {
-        setLoading(true);
-        setError(null);
-        setRequest((value) => value + 1);
-    }, []);
-    useEffect(() => {
-        const controller = new AbortController();
-        getProperties(controller.signal).then((data) => {
-            if (!controller.signal.aborted) setProperties(data);
-        }).catch(() => {
-            if (!controller.signal.aborted) setError('No fue posible cargar los alojamientos.');
-        }).finally(() => {
-            if (!controller.signal.aborted) setLoading(false);
-        });
-        return () => controller.abort();
-    }, [request]);
-    return { properties, loading, error, reload };
+    const query = useQuery({
+        queryKey: ['properties', 'public'],
+        queryFn: ({ signal }) => getProperties(signal),
+        staleTime: 60_000,
+        retry: 1,
+    });
+
+    return {
+        properties: query.data ?? [],
+        loading: query.isPending || (query.isFetching && query.data === undefined),
+        error: query.isError && !query.isFetching
+            ? 'No fue posible cargar los alojamientos.'
+            : null,
+        reload: query.refetch,
+    };
 }
