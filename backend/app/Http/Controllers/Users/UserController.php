@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\StoreUserRequest;
@@ -20,7 +20,7 @@ class UserController extends Controller
     }
 
     public function index(Request $request): JsonResponse
-      {
+    {
         $users = $this->UsersService->getAll(
             perPage: 20,
             search: $request->string('search')->toString()
@@ -31,7 +31,6 @@ class UserController extends Controller
             'data' => $users,
         ]);
     }
-   
 
     /**
      * Store a newly created resource in storage.

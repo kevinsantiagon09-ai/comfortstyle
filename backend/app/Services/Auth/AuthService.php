@@ -2,11 +2,13 @@
 
 namespace App\Services\Auth;
 
+use App\Models\Estado;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class AuthService
@@ -33,10 +35,12 @@ class AuthService
             $data['password'] = Hash::make(
                 $data['password']
             );
+            $data['status_id'] = Estado::activo()->id;
 
             $user = User::create($data);
 
             $user->roles()->attach($role->id, [
+                'uuid' => (string) Str::uuid(),
                 'assigned_at' => now(),
             ]);
 
@@ -48,19 +52,16 @@ class AuthService
         });
     }
 
-    public function login(array $credentials): User
+    /**
+     * Inicia sesión con un usuario ya verificado por LoginRequest.
+     */
+    public function login(User $user): User
     {
-        if (! Auth::attempt($credentials)) {
-            throw ValidationException::withMessages([
-                'email' => [
-                    'Las credenciales son incorrectas.',
-                ],
-            ]);
-        }
+        Auth::login($user);
 
         request()->session()->regenerate();
 
-        return Auth::user()->load('roles');
+        return $user->load('roles');
     }
 
     public function logout(): void

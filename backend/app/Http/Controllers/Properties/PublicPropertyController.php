@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Properties;
 
 use App\Http\Controllers\Controller;
 use App\Models\Property;
@@ -20,21 +20,17 @@ class PublicPropertyController extends Controller
                         ->orderBy('display_order');
                 },
                 'host:id,uuid,name',
+                'location.department',
             ])
             ->when(
                 $request->filled('city'),
-                fn ($query) => $query->where(
-                    'city',
-                    'ilike',
-                    '%'.$request->string('city').'%'
-                )
+                fn ($query) => $query->whereHas('location', fn ($city) => $city->where('name', 'ilike', '%'.$request->string('city').'%'))
             )
             ->latest()
             ->paginate(12);
 
         return response()->json([
-            'message' =>
-                'Alojamientos consultados correctamente.',
+            'message' => 'Alojamientos consultados correctamente.',
 
             'data' => $properties,
         ]);
@@ -47,6 +43,7 @@ class PublicPropertyController extends Controller
         return response()->json([
             'data' => $property->load([
                 'host:id,uuid,name',
+                'location.department',
                 'images' => function ($query) {
                     $query
                         ->where('is_active', true)

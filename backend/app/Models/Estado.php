@@ -10,6 +10,8 @@ class Estado extends Model
 {
     use SoftDeletes;
 
+    public const ACTIVO = 'ACTIVO';
+
     protected $fillable = [
         'uuid',
         'descripcion',
@@ -21,6 +23,12 @@ class Estado extends Model
         return [
             'is_active' => 'boolean',
         ];
+    }
+
+    /** Estado asignado a las cuentas habilitadas; sin distinguir mayúsculas. */
+    public static function activo(): self
+    {
+        return static::whereRaw('upper(descripcion) = ?', [self::ACTIVO])->orderBy('id')->firstOrFail();
     }
 
     protected static function booted(): void

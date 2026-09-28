@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests\Properties;
 
+use App\Models\Property;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class StorePropertyRequest extends FormRequest
 {
+    public const MAX_IMAGES = 10;
+
     public function authorize(): bool
     {
         return true;
@@ -26,11 +29,7 @@ class StorePropertyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' =>[
-                'required',
-                'integer',
-                'exists:users,id',
-            ],
+            'user_id' => ['prohibited'],
 
             'name' => [
                 'required',
@@ -56,17 +55,10 @@ class StorePropertyRequest extends FormRequest
                 'max:255',
             ],
 
-            'department' => [
-                'required',
-                'string',
-                'max:100',
-            ],
+            'department' => ['prohibited'],
 
-            'city' => [
-                'required',
-                'string',
-                'max:100',
-            ],
+            'city' => ['prohibited'],
+            'city_id' => ['required', 'integer', 'exists:cities,id'],
 
             'max_guests' => [
                 'required',
@@ -76,30 +68,32 @@ class StorePropertyRequest extends FormRequest
             ],
 
             'bathrooms' => [
-                
+
                 'integer',
                 'min:1',
                 'max:50',
             ],
 
             'bedrooms' => [
-                
+
                 'integer',
                 'min:1',
                 'max:100',
             ],
 
             'beds' => [
-              
+
                 'integer',
                 'min:1',
                 'max:200',
             ],
 
             'price' => [
-               
+                'required',
                 'numeric',
+                'decimal:0,2',
                 'min:0',
+                'max:'.Property::MAX_PRICE,
             ],
 
             'currency' => [
@@ -123,6 +117,20 @@ class StorePropertyRequest extends FormRequest
                 'sometimes',
                 'boolean',
             ],
+
+            'images' => [
+                'required',
+                'array',
+                'min:1',
+                'max:'.self::MAX_IMAGES,
+            ],
+
+            'images.*' => [
+                'required',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:5120',
+            ],
         ];
     }
 
@@ -144,7 +152,6 @@ class StorePropertyRequest extends FormRequest
             'department.required' => 'El departamento es obligatorio.',
             'city.required' => 'La ciudad es obligatoria.',
 
-
             'max_guests.required' => 'La capacidad máxima de huéspedes es obligatoria.',
             'max_guests.min' => 'La propiedad debe aceptar al menos un huésped.',
 
@@ -155,6 +162,8 @@ class StorePropertyRequest extends FormRequest
             'price.required' => 'El precio base es obligatorio.',
             'price.numeric' => 'El precio base debe ser numérico.',
             'price.min' => 'El precio base no puede ser negativo.',
+            'price.decimal' => 'El precio base admite como máximo dos decimales.',
+            'price.max' => 'El precio base no puede superar 9.999.999.999,99.',
 
             'currency.size' => 'La moneda debe tener exactamente tres caracteres.',
             'currency.in' => 'La moneda debe ser COP, USD o EUR.',
@@ -163,6 +172,15 @@ class StorePropertyRequest extends FormRequest
             'check_out_time.date_format' => 'La hora de salida debe tener el formato HH:MM.',
 
             'is_active.boolean' => 'El estado debe ser verdadero o falso.',
+
+            'images.required' => 'Agrega al menos una fotografía del alojamiento.',
+            'images.array' => 'Las fotografías enviadas no son válidas.',
+            'images.min' => 'Agrega al menos una fotografía del alojamiento.',
+            'images.max' => 'Puedes agregar como máximo '.self::MAX_IMAGES.' fotografías.',
+            'images.*.image' => 'Cada archivo debe ser una imagen.',
+            'images.*.mimes' => 'Las fotografías deben ser JPG, PNG o WEBP.',
+            'images.*.max' => 'Cada fotografía puede pesar como máximo 5 MB.',
+            'images.*.uploaded' => 'Una fotografía no se pudo subir. Verifica que pese menos de 5 MB.',
         ];
     }
 }

@@ -29,12 +29,7 @@ class UpdatePropertyImageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'property_id' => [
-                'sometimes',
-                'required',
-                'integer',
-                'exists:properties,id',
-            ],
+            'property_id' => ['prohibited'],
 
             'image' => [
                 'sometimes',
@@ -73,20 +68,20 @@ class UpdatePropertyImageRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'property_id.required' =>'La propiedad es obligatoria.',
-            'property_id.integer' =>'El identificador de la propiedad debe ser un número entero.',
-            'property_id.exists' =>'La propiedad seleccionada no existe.',
-            'image.required' =>'Debe seleccionar una imagen.',
-            'image.image' =>'El archivo seleccionado debe ser una imagen.',
-            'image.mimes' =>'La imagen debe ser de tipo JPG, JPEG, PNG o WEBP.',
-            'image.max' =>'La imagen no puede superar los 5 MB.',
-            'caption.string' =>'La descripción debe ser un texto.',
-            'caption.max' =>'La descripción no puede superar los 255 caracteres.',
-            'is_cover.boolean' =>'El campo de portada debe ser verdadero o falso.',
-            'display_order.required' =>'El orden es obligatorio cuando se envía.',
-            'display_order.integer' =>'El orden debe ser un número entero.',
-            'display_order.min' =>'El orden no puede ser negativo.',
-            'is_active.boolean' =>'El estado debe ser verdadero o falso.',
+            'property_id.required' => 'La propiedad es obligatoria.',
+            'property_id.integer' => 'El identificador de la propiedad debe ser un número entero.',
+            'property_id.exists' => 'La propiedad seleccionada no existe.',
+            'image.required' => 'Debe seleccionar una imagen.',
+            'image.image' => 'El archivo seleccionado debe ser una imagen.',
+            'image.mimes' => 'La imagen debe ser de tipo JPG, JPEG, PNG o WEBP.',
+            'image.max' => 'La imagen no puede superar los 5 MB.',
+            'caption.string' => 'La descripción debe ser un texto.',
+            'caption.max' => 'La descripción no puede superar los 255 caracteres.',
+            'is_cover.boolean' => 'El campo de portada debe ser verdadero o falso.',
+            'display_order.required' => 'El orden es obligatorio cuando se envía.',
+            'display_order.integer' => 'El orden debe ser un número entero.',
+            'display_order.min' => 'El orden no puede ser negativo.',
+            'is_active.boolean' => 'El estado debe ser verdadero o falso.',
         ];
     }
 }

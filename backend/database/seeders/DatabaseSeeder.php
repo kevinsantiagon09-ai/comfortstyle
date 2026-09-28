@@ -2,23 +2,22 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
+     *
+     * Sin WithoutModelEvents: los modelos generan su uuid en el evento creating.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         $this->call([
-            UserSeeder::class,
+            LocationSeeder::class,
+            RoleSeeder::class,
+            EstadoSeeder::class,
+            AdminUserSeeder::class,
         ]);
     }
 }

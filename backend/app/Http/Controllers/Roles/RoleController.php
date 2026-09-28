@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Roles;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRoleRequest;
@@ -11,8 +11,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
-{ 
-    protected $roleService; 
+{
+    protected $roleService;
+
     public function __construct(RolesServices $roleService)
     {
         $this->roleService = $roleService;

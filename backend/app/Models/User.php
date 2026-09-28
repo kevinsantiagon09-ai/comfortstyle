@@ -77,10 +77,17 @@ class User extends Authenticatable
         return $this->belongsTo(Estado::class, 'status_id');
     }
 
+    public function isActive(): bool
+    {
+        return $this->deleted_at === null
+            && strtoupper((string) $this->status?->descripcion) === Estado::ACTIVO;
+    }
+
     public function hasRole(string $role): bool
     {
         return $this->roles()
             ->where('name', strtoupper($role))
+            ->where('is_active', true)
             ->exists();
     }
 }

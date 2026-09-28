@@ -14,7 +14,7 @@ return new class extends Migration
 
             $table->uuid('uuid')
                 ->unique()
-                ->default(DB::raw('gen_random_uuid()'));
+                ->default(DB::raw('(gen_random_uuid())'));
 
             $table->foreignId('user_id')
                 ->constrained('users')

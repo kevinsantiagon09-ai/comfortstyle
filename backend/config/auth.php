@@ -114,4 +114,20 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Administrador del sistema
+    |--------------------------------------------------------------------------
+    |
+    | Único usuario creado por seeder. La contraseña se exige en el entorno y
+    | solo se usa al crearlo; volver a ejecutar el seeder no la reemplaza.
+    |
+    */
+
+    'admin' => [
+        'name' => env('ADMIN_NAME', 'Administrador'),
+        'email' => env('ADMIN_EMAIL', 'admin@comfortstyle.test'),
+        'password' => env('ADMIN_PASSWORD'),
+    ],
+
 ];

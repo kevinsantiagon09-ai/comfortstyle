@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Properties;
 
+use App\Models\Property;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -26,12 +27,7 @@ class UpdatePropertyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => [
-                'sometimes',
-                'required',
-                'integer',
-                'exists:users,id',
-            ],
+            'user_id' => ['prohibited'],
 
             'name' => [
                 'sometimes',
@@ -61,19 +57,10 @@ class UpdatePropertyRequest extends FormRequest
                 'max:255',
             ],
 
-            'department' => [
-                'sometimes',
-                'required',
-                'string',
-                'max:100',
-            ],
+            'department' => ['prohibited'],
 
-            'city' => [
-                'sometimes',
-                'required',
-                'string',
-                'max:100',
-            ],
+            'city' => ['prohibited'],
+            'city_id' => ['sometimes', 'required', 'integer', 'exists:cities,id'],
 
             'max_guests' => [
                 'sometimes',
@@ -111,7 +98,9 @@ class UpdatePropertyRequest extends FormRequest
                 'sometimes',
                 'required',
                 'numeric',
+                'decimal:0,2',
                 'min:0',
+                'max:'.Property::MAX_PRICE,
             ],
 
             'currency' => [
@@ -185,6 +174,8 @@ class UpdatePropertyRequest extends FormRequest
             'price.required' => 'El precio base es obligatorio.',
             'price.numeric' => 'El precio base debe ser numérico.',
             'price.min' => 'El precio base no puede ser negativo.',
+            'price.decimal' => 'El precio base admite como máximo dos decimales.',
+            'price.max' => 'El precio base no puede superar 9.999.999.999,99.',
 
             'currency.size' => 'La moneda debe tener exactamente tres caracteres.',
             'currency.in' => 'La moneda debe ser COP, USD o EUR.',

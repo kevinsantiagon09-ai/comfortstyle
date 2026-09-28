@@ -33,7 +33,7 @@ class AuthController extends Controller
         LoginRequest $request
     ): JsonResponse {
         $user = $this->authService->login(
-            $request->validated()
+            $request->authenticatedUser()
         );
 
         return response()->json([

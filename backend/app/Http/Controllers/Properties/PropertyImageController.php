@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Properties;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Properties\StorePropertyImageRequest;
@@ -10,6 +10,7 @@ use App\Models\PropertyImage;
 use App\Services\Properties\PropertyImageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class PropertyImageController extends Controller
 {
@@ -22,7 +23,6 @@ class PropertyImageController extends Controller
     }
 
     public function index(Request $request): JsonResponse
-    
     {
         $validated = $request->validate([
             'property_id' => [
@@ -41,6 +41,7 @@ class PropertyImageController extends Controller
             $validated['property_id']
         );
 
+        Gate::authorize('view', $property);
         $images = $this->propertyImageService
             ->getByProperty(
                 property: $property,
@@ -48,8 +49,7 @@ class PropertyImageController extends Controller
             );
 
         return response()->json([
-            'message' =>
-                'Imágenes consultadas correctamente.',
+            'message' => 'Imágenes consultadas correctamente.',
 
             'data' => $images,
         ]);
@@ -58,12 +58,12 @@ class PropertyImageController extends Controller
     public function store(
         StorePropertyImageRequest $request
     ): JsonResponse {
+        Gate::authorize('update', Property::findOrFail($request->validated('property_id')));
         $propertyImage = $this->propertyImageService
             ->create($request->validated());
 
         return response()->json([
-            'message' =>
-                'Imagen registrada correctamente.',
+            'message' => 'Imagen registrada correctamente.',
 
             'data' => $propertyImage,
         ], 201);
@@ -72,12 +72,12 @@ class PropertyImageController extends Controller
     public function show(
         PropertyImage $propertyImage
     ): JsonResponse {
+        Gate::authorize('update', $propertyImage->property);
         $propertyImage = $this->propertyImageService
             ->find($propertyImage);
 
         return response()->json([
-            'message' =>
-                'Imagen consultada correctamente.',
+            'message' => 'Imagen consultada correctamente.',
 
             'data' => $propertyImage,
         ]);
@@ -87,6 +87,7 @@ class PropertyImageController extends Controller
         UpdatePropertyImageRequest $request,
         PropertyImage $propertyImage
     ): JsonResponse {
+        Gate::authorize('update', $propertyImage->property);
         $propertyImage = $this->propertyImageService
             ->update(
                 $propertyImage,
@@ -94,8 +95,7 @@ class PropertyImageController extends Controller
             );
 
         return response()->json([
-            'message' =>
-                'Imagen actualizada correctamente.',
+            'message' => 'Imagen actualizada correctamente.',
 
             'data' => $propertyImage,
         ]);

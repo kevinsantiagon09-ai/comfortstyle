@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\States;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEstadoRequest;
@@ -14,8 +14,7 @@ class EstadoController extends Controller
 {
     public function __construct(
         private readonly EstadoService $estadoService
-    ) {
-    }
+    ) {}
 
     public function index(Request $request): JsonResponse
     {

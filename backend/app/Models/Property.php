@@ -2,27 +2,48 @@
 
 namespace App\Models;
 
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-
 class Property extends Model
 {
+    use HasFactory;
     use SoftDeletes;
-    
+
+    /** Máximo admitido por la columna price, decimal(12,2). */
+    public const MAX_PRICE = 9999999999.99;
+
+    protected $appends = ['city', 'department'];
+
+    protected $hidden = ['location'];
+
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(City::class, 'city_id');
+    }
+
+    public function getCityAttribute(): ?string
+    {
+        return $this->location?->name;
+    }
+
+    public function getDepartmentAttribute(): ?string
+    {
+        return $this->location?->department?->name;
+    }
+
     protected $fillable = [
-         'uuid',
+        'uuid',
         'user_id',
         'name',
         'description',
         'property_type',
         'address',
-        'department',
-        'city',
+        'city_id',
         'latitude',
         'longitude',
         'max_guests',
@@ -51,22 +72,20 @@ class Property extends Model
     protected static function booted(): void
     {
         static::creating(function (Property $property) {
-            $property->uuid ??= (string)Str::uuid();
+            $property->uuid ??= (string) Str::uuid();
         });
     }
 
-    public function host() :BelongsTo
+    public function host(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function images(): HasMany
-{
-    return $this->hasMany(
-        PropertyImage::class,
-        'property_id'
-    )->orderBy('display_order');
+    {
+        return $this->hasMany(
+            PropertyImage::class,
+            'property_id'
+        )->orderBy('display_order');
+    }
 }
-}
-
-
