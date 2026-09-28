@@ -1,4 +1,4 @@
-export type UserRole = 'ARRENDATARIO' | 'ARRENDADOR';
+export type UserRole = 'HUESPED' | 'ANFITRION';
 
 export interface AuthRole {
     id: number;

@@ -11,7 +11,7 @@ export default function AuthForm({ registerMode = false }: { registerMode?: bool
     const [pending, setPending] = useState(false);
     const [error, setError] = useState('');
     if (loading) return <p role="status">Cargando sesión...</p>;
-    if (user) return <Navigate to={user.roles.some((role) => role.name === 'ARRENDADOR') ? '/host' : '/guest'} replace />;
+    if (user) return <Navigate to={user.roles.some((role) => role.name === 'ANFITRION') ? '/host' : '/guest'} replace />;
     const submit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -52,7 +52,7 @@ export default function AuthForm({ registerMode = false }: { registerMode?: bool
                 {registerMode && <>
                     <p className="text-sm text-slate-600">Usa al menos 8 caracteres, incluyendo letras y números.</p>
                     <PasswordField label="Confirmar contraseña" name="password_confirmation" autoComplete="new-password" minLength={8} />
-                    <label className="block">Tipo de cuenta<select className={inputClass} name="role" defaultValue="ARRENDATARIO"><option value="ARRENDATARIO">Huésped</option><option value="ARRENDADOR">Anfitrión</option></select></label>
+                    <label className="block">Tipo de cuenta<select className={inputClass} name="role" defaultValue="HUESPED"><option value="HUESPED">Huésped</option><option value="ANFITRION">Anfitrión</option></select></label>
                 </>}
                 {error && <p role="alert" className="text-red-700">{error}</p>}
                 <button disabled={pending} className="w-full rounded-lg bg-blue-700 px-4 py-2 text-white disabled:opacity-50">{pending ? 'Procesando...' : registerMode ? 'Crear cuenta' : 'Entrar'}</button>
