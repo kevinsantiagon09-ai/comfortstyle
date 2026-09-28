@@ -113,6 +113,17 @@ class StorePropertyRequest extends FormRequest
                 'date_format:H:i',
             ],
 
+            'amenities' => [
+                'sometimes',
+                'array',
+            ],
+
+            'amenities.*' => [
+                'integer',
+                'distinct',
+                Rule::exists('amenities', 'id')->where('is_active', true)->whereNull('deleted_at'),
+            ],
+
             'is_active' => [
                 'sometimes',
                 'boolean',
@@ -170,6 +181,11 @@ class StorePropertyRequest extends FormRequest
 
             'check_in_time.date_format' => 'La hora de entrada debe tener el formato HH:MM.',
             'check_out_time.date_format' => 'La hora de salida debe tener el formato HH:MM.',
+
+            'amenities.array' => 'Las comodidades enviadas no son válidas.',
+            'amenities.*.integer' => 'Las comodidades enviadas no son válidas.',
+            'amenities.*.distinct' => 'Una comodidad está repetida.',
+            'amenities.*.exists' => 'Una de las comodidades seleccionadas no está disponible.',
 
             'is_active.boolean' => 'El estado debe ser verdadero o falso.',
 

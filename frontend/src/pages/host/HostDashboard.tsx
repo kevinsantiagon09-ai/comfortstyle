@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Camera, MapPin, Pencil, Plus, Send } from 'lucide-react';
 import { useHostProperties } from '../../features/properties/hooks/useHostProperties';
 import { hasSetupProgress, usePropertySetupStore } from '../../features/properties/store/usePropertySetupStore';
 import { apiError } from '../../features/properties/utils/apiError';
+import { formatPrice } from '../../features/properties/utils/propertyForm';
 import { propertyImageUrl } from '../../utils/imageUrl';
 
 export default function HostDashboard() {
@@ -18,7 +20,8 @@ export default function HostDashboard() {
                     <h1 className="text-3xl font-bold">Mis alojamientos</h1>
                     <p className="mt-2 text-slate-600">Crea, completa y publica tus alojamientos.</p>
                 </div>
-                <Link to="/host/setup" className="rounded-xl bg-blue-700 px-5 py-3 font-semibold text-white">
+                <Link to="/host/setup" className="inline-flex items-center gap-2 rounded-xl bg-blue-700 px-5 py-3 font-semibold text-white">
+                    <Plus aria-hidden="true" className="h-5 w-5" />
                     {localDraft ? 'Continuar configuración' : 'Nuevo alojamiento'}
                 </Link>
             </div>
@@ -52,10 +55,16 @@ export default function HostDashboard() {
                                             {property.is_active ? 'Publicado' : 'Borrador'}
                                         </span>
                                     </div>
-                                    <p className="text-sm text-slate-500">{property.city}, {property.department}</p>
-                                    <Link to={`/host/setup?property=${property.id}`} className="inline-block text-sm font-medium text-blue-700">
-                                        {property.is_active ? 'Gestionar fotografías' : 'Continuar y publicar'}
-                                    </Link>
+                                    <p className="flex items-center gap-1 text-sm text-slate-500"><MapPin aria-hidden="true" className="h-4 w-4 shrink-0" />{property.city}, {property.department}</p>
+                                    <p className="text-slate-900"><strong>{formatPrice(property)}</strong> <span className="text-sm text-slate-500">por noche</span></p>
+                                    <div className="flex gap-2 border-t border-slate-100 pt-3">
+                                        <Link to={`/host/properties/${property.id}/edit`} className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-blue-700 px-3 py-2 text-sm font-semibold text-white">
+                                            <Pencil aria-hidden="true" className="h-4 w-4" />Editar
+                                        </Link>
+                                        <Link to={`/host/setup?property=${property.id}`} className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:border-blue-400">
+                                            {property.is_active ? <><Camera aria-hidden="true" className="h-4 w-4" />Fotografías</> : <><Send aria-hidden="true" className="h-4 w-4" />Publicar</>}
+                                        </Link>
+                                    </div>
                                 </div>
                             </li>
                         );

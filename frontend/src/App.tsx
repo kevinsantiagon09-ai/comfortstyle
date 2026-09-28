@@ -10,6 +10,7 @@ import HostLayout from './layouts/HostLayout';
 import GuestDashboard from './pages/guest/GuestDashboard';
 import HostDashboard from './pages/host/HostDashboard';
 import PropertySetupPage from './features/properties/pages/PropertySetupPage';
+import PropertyEditPage from './features/properties/pages/PropertyEditPage';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPages';
@@ -46,6 +47,7 @@ export default function App() {
                     >
                         <Route element={<HostLayout />}>
                             <Route path="/host/setup" element={<PropertySetupPage />} />
+                            <Route path="/host/properties/:id/edit" element={<PropertyEditPage />} />
                             <Route
                                 path="/host"
                                 element={<HostDashboard />}

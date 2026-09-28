@@ -44,6 +44,7 @@ class PublicPropertyController extends Controller
             'data' => $property->load([
                 'host:id,uuid,name',
                 'location.department',
+                'amenities:id,name,category,icon',
                 'images' => function ($query) {
                     $query
                         ->where('is_active', true)

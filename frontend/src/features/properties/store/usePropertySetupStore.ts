@@ -5,17 +5,19 @@ export const initialSetupForm = {
     name: '', description: '', property_type: 'Casa', address: '', departmentId: '', cityId: '',
     max_guests: '2', bathrooms: '1', bedrooms: '1', beds: '1', price: '', currency: 'COP',
     check_in_time: '15:00', check_out_time: '11:00',
+    amenities: [] as number[],
 };
 
-export const LAST_STEP = 3;
+export const LAST_STEP = 4;
 
 export type SetupForm = typeof initialSetupForm;
-export type SetupField = keyof SetupForm;
+export type SetupField = Exclude<keyof SetupForm, 'amenities'>;
 
 interface PropertySetupState {
     step: number;
     form: SetupForm;
     setField: (key: SetupField, value: string) => void;
+    toggleAmenity: (id: number) => void;
     next: () => void;
     back: () => void;
     goTo: (step: number) => void;
@@ -34,6 +36,10 @@ export const usePropertySetupStore = create<PropertySetupState>()(
             setField: (key, value) => set((state) => ({
                 form: { ...state.form, [key]: value, ...(key === 'departmentId' ? { cityId: '' } : {}) },
             })),
+            toggleAmenity: (id) => set((state) => {
+                const { amenities } = state.form;
+                return { form: { ...state.form, amenities: amenities.includes(id) ? amenities.filter((item) => item !== id) : [...amenities, id] } };
+            }),
             next: () => set((state) => ({ step: Math.min(state.step + 1, LAST_STEP) })),
             goTo: (step) => set({ step: Math.min(Math.max(step, 0), LAST_STEP) }),
             back: () => set((state) => ({ step: Math.max(state.step - 1, 0) })),
@@ -46,7 +52,7 @@ export const usePropertySetupStore = create<PropertySetupState>()(
             partialize: ({ step, form }) => ({ step, form }),
             merge: (persisted, current) => {
                 const saved = persisted as Partial<Pick<PropertySetupState, 'step' | 'form'>> | undefined;
-                return { ...current, step: saved?.step ?? 0, form: { ...initialSetupForm, ...saved?.form } };
+                return { ...current, step: saved?.step ?? 0, form: { ...initialSetupForm, ...saved?.form, amenities: Array.isArray(saved?.form?.amenities) ? saved.form.amenities : [] } };
             },
         }
     )

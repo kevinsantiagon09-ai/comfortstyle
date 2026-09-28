@@ -9,6 +9,14 @@ export interface PropertyImage {
     is_active: boolean;
 }
 
+export interface Amenity {
+    id: number;
+    name: string;
+    category: string | null;
+    description?: string | null;
+    icon: string | null;
+}
+
 export interface PropertyHost {
     id: number;
     uuid: string;
@@ -26,6 +34,7 @@ export interface Property {
     property_type: string;
     address: string;
     department: string;
+    department_id: number | null;
     city: string;
     max_guests: number;
     bathrooms: number;
@@ -38,4 +47,5 @@ export interface Property {
     is_active: boolean;
     host?: PropertyHost;
     images: PropertyImage[];
+    amenities?: Amenity[];
 }

@@ -20,6 +20,7 @@ class PropertyService
             ->with([
                 'location.department',
                 'host:id,uuid,name,email',
+                'amenities:id,name,category,icon',
 
                 'images' => function ($query) {
                     $query
@@ -54,13 +55,15 @@ class PropertyService
     public function create(array $data): Property
     {
         $images = $data['images'] ?? [];
-        unset($data['images']);
+        $amenities = $data['amenities'] ?? [];
+        unset($data['images'], $data['amenities']);
         $data['is_active'] ??= true;
         $paths = [];
 
         try {
-            return DB::transaction(function () use ($data, $images, &$paths): Property {
+            return DB::transaction(function () use ($data, $images, $amenities, &$paths): Property {
                 $property = Property::create($data);
+                $property->amenities()->sync($amenities);
 
                 foreach (array_values($images) as $order => $image) {
                     $paths[] = $path = $image->store("properties/{$property->id}", 'public');
@@ -73,7 +76,7 @@ class PropertyService
                 }
 
                 return $property->load(
-                    'host:id,uuid,name,email', 'location.department', 'images'
+                    'host:id,uuid,name,email', 'location.department', 'images', 'amenities:id,name,category,icon'
                 );
             });
         } catch (Throwable $exception) {
@@ -86,7 +89,7 @@ class PropertyService
     public function find(Property $property): Property
     {
         return $property->load(
-            'host:id,uuid,name,email', 'location.department', 'images'
+            'host:id,uuid,name,email', 'location.department', 'images', 'amenities:id,name,category,icon'
         );
     }
 
@@ -96,11 +99,15 @@ class PropertyService
     ): Property {
         return DB::transaction(
             function () use ($property, $data): Property {
+                if (array_key_exists('amenities', $data)) {
+                    $property->amenities()->sync($data['amenities']);
+                    unset($data['amenities']);
+                }
                 $property->update($data);
 
                 return $property
                     ->fresh()
-                    ->load('host:id,uuid,name,email', 'location.department', 'images');
+                    ->load('host:id,uuid,name,email', 'location.department', 'images', 'amenities:id,name,category,icon');
             }
         );
     }

@@ -1,50 +1,44 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { ArrowLeft, CircleCheck } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createProperty, validatePropertyFields, type PropertyInput } from '../api/hostProperties.api';
 import { propertyKeys } from '../api/queryKeys';
 import { useLocations } from '../hooks/useLocations';
 import { apiError, fieldErrors } from '../utils/apiError';
+import { backendField, toInput, without } from '../utils/propertyForm';
 import PropertyPhotosStep from '../components/PropertyPhotosStep';
 import PropertyPhotoPicker from '../components/PropertyPhotoPicker';
-import { clearPropertySetup, LAST_STEP, usePropertySetupStore, type SetupField, type SetupForm } from '../store/usePropertySetupStore';
+import PropertyAmenitiesPicker from '../components/PropertyAmenitiesPicker';
+import { CapacityFields, DetailsFields, LocationFields } from '../components/PropertyFormSections';
+import { setupSteps } from '../utils/setupSteps';
+import { clearPropertySetup, LAST_STEP, usePropertySetupStore, type SetupField } from '../store/usePropertySetupStore';
 
-const field = 'mt-2 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100';
 const button = 'rounded-xl bg-blue-700 px-6 py-3 font-semibold text-white disabled:opacity-50';
-const steps = ['Tu alojamiento', 'Ubicación', 'Capacidad y precio', 'Fotografías'];
-/** Campos que el backend valida en cada paso; el último paso son las fotos. */
+/** Paso de las fotos: se validan en el navegador porque solo se envían al registrar. */
+const PHOTOS_STEP = 3;
+/** Campos que el backend valida en cada paso. */
 const stepFields: (keyof PropertyInput | 'images')[][] = [
     ['name', 'property_type', 'description'],
     ['city_id', 'address'],
     ['max_guests', 'bedrooms', 'beds', 'bathrooms', 'price', 'currency', 'check_in_time', 'check_out_time'],
     ['images'],
+    ['amenities'],
 ];
-/** Nombre del campo en el backend → campo del formulario, cuando difieren. */
-const formField: Partial<Record<string, SetupField>> = { city_id: 'cityId' };
-
-const toInput = (form: SetupForm): PropertyInput => ({
-    name: form.name.trim(), description: form.description.trim(), property_type: form.property_type,
-    address: form.address.trim(), city_id: form.cityId, max_guests: form.max_guests,
-    bathrooms: form.bathrooms, bedrooms: form.bedrooms, beds: form.beds,
-    price: form.price, currency: form.currency,
-    check_in_time: form.check_in_time || null, check_out_time: form.check_out_time || null,
-});
-
-const without = (errors: Record<string, string>, key: string) => Object.fromEntries(Object.entries(errors).filter(([name]) => name !== key));
-
-function FieldError({ message }: { message?: string }) {
-    return message ? <span role="alert" className="mt-1 block text-sm text-red-700">{message}</span> : null;
-}
-
 export default function PropertySetupPage() {
     const [params, setParams] = useSearchParams();
     const rawId = params.get('property');
     const propertyId = rawId === null ? null : Number(rawId);
-    const { step, form, setField, next, back, goTo } = usePropertySetupStore();
+    const { step, form, setField, toggleAmenity, next, back, goTo } = usePropertySetupStore();
     const { departments, cities } = useLocations(form.departmentId);
     const client = useQueryClient();
     const [photos, setPhotos] = useState<File[]>([]);
     const [errors, setErrors] = useState<Record<string, string>>({});
+    const change = (key: SetupField, value: string) => {
+        setField(key, value);
+        const backendKey = backendField(key);
+        if (errors[backendKey]) setErrors((current) => without(current, backendKey));
+    };
 
     const validation = useMutation({
         mutationFn: (fields: (keyof PropertyInput)[]) => validatePropertyFields(toInput(form), fields),
@@ -73,51 +67,40 @@ export default function PropertySetupPage() {
     const requestError = validation.error ?? registration.error;
     const showRequestError = requestError !== null && Object.keys(fieldErrors(requestError)).length === 0;
 
-    const change = (key: SetupField, value: string) => {
-        setField(key, value);
-        const backendKey = Object.keys(formField).find((name) => formField[name] === key) ?? key;
-        if (errors[backendKey]) setErrors((current) => without(current, backendKey));
-    };
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (busy) return;
+        // Las fotos no sobreviven a una recarga: si faltan, se vuelve a su paso antes de registrar.
+        if (step >= PHOTOS_STEP && photos.length === 0) { setErrors({ images: 'Agrega al menos una fotografía del alojamiento.' }); goTo(PHOTOS_STEP); return; }
+        if (step === PHOTOS_STEP) { setErrors({}); next(); return; }
         if (step < LAST_STEP) { validation.mutate(stepFields[step] as (keyof PropertyInput)[]); return; }
-        if (photos.length === 0) { setErrors({ images: 'Agrega al menos una fotografía del alojamiento.' }); return; }
         registration.mutate();
     };
 
     if (propertyId !== null && (!Number.isSafeInteger(propertyId) || propertyId <= 0)) return <p role="alert">El alojamiento seleccionado no es válido. <Link to="/host">Volver al panel</Link></p>;
-    const activeStep = propertyId ? LAST_STEP : step;
+    const activeStep = propertyId ? PHOTOS_STEP : step;
+    const StepIcon = setupSteps[step].icon;
     return <section className="mx-auto max-w-3xl">
-        <Link to="/host" className="text-sm font-medium text-blue-700">← Mis alojamientos</Link>
+        <Link to="/host" className="inline-flex items-center gap-1 text-sm font-medium text-blue-700"><ArrowLeft aria-hidden="true" className="h-4 w-4" />Mis alojamientos</Link>
         <p className="mt-8 text-sm font-semibold uppercase tracking-widest text-blue-700">Comienza a recibir huéspedes</p>
         <h1 className="mt-2 text-3xl font-bold text-slate-900">Configuremos tu alojamiento</h1>
         <p className="mt-3 text-slate-600">Completa los pasos y registra tu alojamiento listo para recibir huéspedes.</p>
-        <ol aria-label="Progreso de configuración" className="my-8 grid grid-cols-2 gap-3 sm:grid-cols-4">{steps.map((label, index) => <li key={label} aria-current={activeStep === index ? 'step' : undefined} className={`rounded-xl border p-3 text-sm ${index === activeStep ? 'border-blue-600 bg-blue-50 text-blue-800' : 'border-slate-200 text-slate-500'}`}><span className="mb-1 block font-bold">{index + 1}</span>{label}</li>)}</ol>
+        <ol aria-label="Progreso de configuración" className="my-8 grid grid-cols-2 gap-3 sm:grid-cols-5">{setupSteps.map(({ label, icon: Icon }, index) => {
+            const done = index < activeStep;
+            return <li key={label} aria-current={activeStep === index ? 'step' : undefined} className={`rounded-xl border p-3 text-sm ${index === activeStep ? 'border-blue-600 bg-blue-50 text-blue-800' : done ? 'border-green-200 bg-green-50 text-green-800' : 'border-slate-200 text-slate-500'}`}>
+                <span className="mb-1 flex items-center justify-between font-bold">{index + 1}{done ? <CircleCheck aria-label="Completado" className="h-5 w-5" /> : <Icon aria-hidden="true" className="h-5 w-5" />}</span>{label}
+            </li>;
+        })}</ol>
         {propertyId ? <PropertyPhotosStep key={propertyId} propertyId={propertyId} /> : <form onSubmit={submit} noValidate className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
             <fieldset disabled={busy} className="space-y-5">
-                <legend className="mb-5 text-xl font-semibold">{steps[step]}</legend>
-                {step === 0 && <>
-                    <label className="block">Nombre del alojamiento<input autoFocus className={field} aria-invalid={!!errors.name} maxLength={150} value={form.name} onChange={e => change('name', e.target.value)} placeholder="Una casa tranquila cerca del centro" /><FieldError message={errors.name} /></label>
-                    <label className="block">Tipo de alojamiento<select className={field} aria-invalid={!!errors.property_type} value={form.property_type} onChange={e => change('property_type', e.target.value)}>{['Casa', 'Apartamento', 'Cabaña', 'Habitación', 'Finca'].map(type => <option key={type}>{type}</option>)}</select><FieldError message={errors.property_type} /></label>
-                    <label className="block">Descripción<textarea className={field} aria-invalid={!!errors.description} maxLength={3000} rows={5} value={form.description} onChange={e => change('description', e.target.value)} placeholder="Cuéntales a tus huéspedes qué hace especial este lugar." /><FieldError message={errors.description} /></label>
-                </>}
-                {step === 1 && <>
-                    <label className="block">Departamento<select className={field} value={form.departmentId} onChange={e => change('departmentId', e.target.value)} disabled={departments.isPending || departments.isError}><option value="">{departments.isPending ? 'Cargando departamentos…' : 'Selecciona un departamento'}</option>{departments.data?.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
-                    {departments.isError && <p role="alert">No pudimos cargar los departamentos. <button type="button" onClick={() => void departments.refetch()} className="text-blue-700 underline">Reintentar</button></p>}
-                    <label className="block">Ciudad o municipio<select className={field} aria-invalid={!!errors.city_id} value={form.cityId} onChange={e => change('cityId', e.target.value)} disabled={!form.departmentId || cities.isPending || cities.isError}><option value="">{form.departmentId && cities.isPending ? 'Cargando ciudades…' : 'Selecciona una ciudad'}</option>{cities.data?.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select><FieldError message={errors.city_id} /></label>
-                    {cities.isError && <p role="alert">No pudimos cargar las ciudades. <button type="button" onClick={() => void cities.refetch()} className="text-blue-700 underline">Reintentar</button></p>}
-                    {form.departmentId && cities.isSuccess && cities.data.length === 0 && <p role="status">Este departamento todavía no tiene ciudades disponibles.</p>}
-                    <label className="block">Dirección<input className={field} aria-invalid={!!errors.address} maxLength={255} autoComplete="street-address" value={form.address} onChange={e => change('address', e.target.value)} /><FieldError message={errors.address} /></label>
-                </>}
-                {step === 2 && <>
-                    <div className="grid grid-cols-2 gap-4">{([['max_guests', 'Huéspedes'], ['bedrooms', 'Habitaciones'], ['beds', 'Camas'], ['bathrooms', 'Baños']] as const).map(([key, label]) => <label key={key}>{label}<input className={field} aria-invalid={!!errors[key]} type="number" step={1} value={form[key]} onChange={e => change(key, e.target.value)} /><FieldError message={errors[key]} /></label>)}</div>
-                    <div className="grid grid-cols-2 gap-4"><label>Precio por noche<input className={field} aria-invalid={!!errors.price} type="number" step="0.01" value={form.price} onChange={e => change('price', e.target.value)} /><FieldError message={errors.price} /></label><label>Moneda<select className={field} aria-invalid={!!errors.currency} value={form.currency} onChange={e => change('currency', e.target.value)}>{['COP', 'USD', 'EUR'].map(currency => <option key={currency}>{currency}</option>)}</select><FieldError message={errors.currency} /></label></div>
-                    <div className="grid grid-cols-2 gap-4"><label>Hora de entrada<input className={field} aria-invalid={!!errors.check_in_time} type="time" value={form.check_in_time} onChange={e => change('check_in_time', e.target.value)} /><FieldError message={errors.check_in_time} /></label><label>Hora de salida<input className={field} aria-invalid={!!errors.check_out_time} type="time" value={form.check_out_time} onChange={e => change('check_out_time', e.target.value)} /><FieldError message={errors.check_out_time} /></label></div>
-                </>}
-                {step === 3 && <>
-                    <PropertyPhotoPicker files={photos} onChange={(files) => { setPhotos(files); setErrors((current) => without(current, 'images')); }} disabled={busy} error={errors.images} />
-                    <p className="rounded-xl bg-slate-50 p-4 text-sm text-slate-600">Al registrar, tu alojamiento quedará publicado con estas fotografías.</p>
+                <legend className="mb-5 flex items-center gap-2 text-xl font-semibold"><StepIcon aria-hidden="true" className="h-6 w-6 text-blue-700" />{setupSteps[step].label}</legend>
+                {step === 0 && <DetailsFields form={form} errors={errors} change={change} autoFocus />}
+                {step === 1 && <LocationFields form={form} errors={errors} change={change} />}
+                {step === 2 && <CapacityFields form={form} errors={errors} change={change} />}
+                {step === PHOTOS_STEP && <PropertyPhotoPicker files={photos} onChange={(files) => { setPhotos(files); setErrors((current) => without(current, 'images')); }} disabled={busy} error={errors.images} />}
+                {step === 4 && <>
+                    <PropertyAmenitiesPicker selected={form.amenities} onToggle={(id) => { toggleAmenity(id); setErrors((current) => without(current, 'amenities')); }} disabled={busy} error={errors.amenities} />
+                    <p className="rounded-xl bg-slate-50 p-4 text-sm text-slate-600">Al registrar, tu alojamiento quedará publicado con tus fotografías y comodidades.</p>
                 </>}
             </fieldset>
             {showRequestError && <p role="alert" className="mt-4 text-red-700">{apiError(requestError)}</p>}

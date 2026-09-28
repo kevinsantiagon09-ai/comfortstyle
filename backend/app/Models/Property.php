@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -17,7 +18,7 @@ class Property extends Model
     /** Máximo admitido por la columna price, decimal(12,2). */
     public const MAX_PRICE = 9999999999.99;
 
-    protected $appends = ['city', 'department'];
+    protected $appends = ['city', 'department', 'department_id'];
 
     protected $hidden = ['location'];
 
@@ -29,6 +30,11 @@ class Property extends Model
     public function getCityAttribute(): ?string
     {
         return $this->location?->name;
+    }
+
+    public function getDepartmentIdAttribute(): ?int
+    {
+        return $this->location?->department_id;
     }
 
     public function getDepartmentAttribute(): ?string
@@ -87,5 +93,13 @@ class Property extends Model
             PropertyImage::class,
             'property_id'
         )->orderBy('display_order');
+    }
+
+    public function amenities(): BelongsToMany
+    {
+        return $this->belongsToMany(Amenity::class)
+            ->withTimestamps()
+            ->orderBy('category')
+            ->orderBy('name');
     }
 }

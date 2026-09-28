@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Locations\LocationController;
+use App\Http\Controllers\Properties\AmenityController;
 use App\Http\Controllers\Properties\PropertyController;
 use App\Http\Controllers\Properties\PropertyImageController;
 use App\Http\Controllers\Properties\PublicPropertyController;
@@ -25,6 +26,7 @@ Route::middleware(['auth:sanctum', 'role:ANFITRION'])->group(function () {
     Route::apiResource('property', PropertyController::class)->except(['destroy'])->middleware(HandlePrecognitiveRequests::class);
     Route::apiResource('property-images', PropertyImageController::class)->except(['destroy']);
 });
+Route::get('/public/amenities', [AmenityController::class, 'index']);
 Route::get('/public/departments', [LocationController::class, 'departments']);
 Route::get('/public/departments/{department}/cities', [LocationController::class, 'cities']);
 

@@ -1,5 +1,5 @@
 import http, { sessionHttp } from '../../../api/http';
-import type { Property, PropertyImage } from '../../../types/property';
+import type { Amenity, Property, PropertyImage } from '../../../types/property';
 
 export interface Department { id: number; name: string; code: string }
 export interface City { id: number; department_id: number; name: string; code: string }
@@ -8,6 +8,7 @@ export interface PropertyInput {
     name: string; description: string; property_type: string; address: string;
     city_id: string; max_guests: string; bathrooms: string; bedrooms: string; beds: string;
     price: string; currency: string; check_in_time: string | null; check_out_time: string | null;
+    amenities: number[];
 }
 export interface PropertyPage { data: Property[]; current_page: number; last_page: number; total: number }
 export async function getDepartments(signal?: AbortSignal) {
@@ -15,6 +16,9 @@ export async function getDepartments(signal?: AbortSignal) {
 }
 export async function getCities(department: string, signal?: AbortSignal) {
     return (await http.get<{ data: City[] }>(`/public/departments/${department}/cities`, { signal })).data.data;
+}
+export async function getAmenities(signal?: AbortSignal) {
+    return (await http.get<{ data: Amenity[] }>('/public/amenities', { signal })).data.data;
 }
 export async function getHostProperties(page: number, signal?: AbortSignal) {
     return (await http.get<{ data: PropertyPage }>('/property', { params: { page }, signal })).data.data;
@@ -31,9 +35,17 @@ export async function validatePropertyFields(data: Partial<PropertyInput>, field
 export async function createProperty(data: PropertyInput, images: File[]) {
     await sessionHttp.get('/sanctum/csrf-cookie');
     const body = new FormData();
-    Object.entries(data).forEach(([key, value]) => { if (value !== null) body.append(key, String(value)); });
+    Object.entries(data).forEach(([key, value]) => {
+        if (Array.isArray(value)) value.forEach((item) => body.append(`${key}[]`, String(item)));
+        else if (value !== null) body.append(key, String(value));
+    });
     images.forEach((image) => body.append('images[]', image));
     return (await http.post<{ data: Property }>('/property', body)).data.data;
+}
+/** Actualiza los datos del alojamiento (las fotos se gestionan aparte). */
+export async function updateProperty(id: number, data: PropertyInput) {
+    await sessionHttp.get('/sanctum/csrf-cookie');
+    return (await http.patch<{ data: Property }>(`/property/${id}`, data)).data.data;
 }
 export async function getPropertyImages(propertyId: number, signal?: AbortSignal) {
     return (await http.get<{ data: PropertyImage[] }>('/property-images', { params: { property_id: propertyId }, signal })).data.data;
