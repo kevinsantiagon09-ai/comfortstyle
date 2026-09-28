@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import * as authApi from '../api/auth.api';
+import { clearPropertySetup } from '../features/properties/store/usePropertySetupStore';
 import { useAuth } from './useAuth';
 import { sessionQueryKey } from './useSession';
 
@@ -14,6 +15,7 @@ export function useNavbar() {
                 predicate: (query) => query.queryKey[0] !== 'auth',
             });
             queryClient.setQueryData(sessionQueryKey, null);
+            clearPropertySetup();
         },
     });
 

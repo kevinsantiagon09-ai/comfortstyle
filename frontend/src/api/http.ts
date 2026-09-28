@@ -8,5 +8,5 @@ const options = {
     headers: { Accept: 'application/json' },
 };
 const http = axios.create({ ...options, baseURL: apiUrl });
-export const sessionHttp = axios.create({ ...options, baseURL: import.meta.env.VITE_AUTH_URL || backendUrl || '/' });
+export const sessionHttp = axios.create({ ...options, baseURL: import.meta.env.VITE_AUTH_URL || backendUrl || (import.meta.env.DEV ? '/backend' : '/') });
 export default http;

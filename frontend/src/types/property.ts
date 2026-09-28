@@ -13,13 +13,14 @@ export interface PropertyHost {
     id: number;
     uuid: string;
     name: string;
-    email: string;
+    email?: string;
 }
 
 export interface Property {
     id: number;
     uuid: string;
     user_id: number;
+    city_id: number;
     name: string;
     description: string;
     property_type: string;
