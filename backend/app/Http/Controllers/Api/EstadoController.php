@@ -29,9 +29,8 @@ class EstadoController extends Controller
         ]);
     }
 
-    public function store(
-        StoreEstadoRequest $request
-    ): JsonResponse {
+    public function store(StoreEstadoRequest $request): JsonResponse
+    {
         $estado = $this->estadoService->create(
             $request->validated()
         );
