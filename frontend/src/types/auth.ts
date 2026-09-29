@@ -1,3 +1,5 @@
+import type { ApiResponse } from './api';
+
 export type UserRole = 'HUESPED' | 'ANFITRION';
 
 export interface AuthRole {
@@ -26,7 +28,27 @@ export interface RegisterData {
     role: UserRole;
 }
 
-export interface AuthResponse {
-    message: string;
-    data: AuthUser;
+export type AuthResponse = ApiResponse<AuthUser>;
+
+export interface AuthSession {
+    user: AuthUser | null;
+    loading: boolean;
+    isAuthenticated: boolean;
+}
+
+export type AuthField = 'name' | 'email' | 'password' | 'password_confirmation' | 'role';
+export type AuthFieldErrors = Partial<Record<AuthField, string>>;
+
+// Props de componentes
+export interface AuthFormProps {
+    registerMode?: boolean;
+}
+
+export interface AuthFieldErrorProps {
+    field: AuthField;
+    message?: string;
+}
+
+export interface RoleRouteProps {
+    allowedRole: UserRole;
 }

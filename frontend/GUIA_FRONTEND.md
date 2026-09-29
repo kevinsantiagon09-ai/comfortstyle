@@ -26,7 +26,7 @@ Una peticion HTTP es un mensaje entre el navegador y el servidor. GET consulta; 
 
 ```text
 frontend/
-  public/          Archivos accesibles por URL, como imagenes de respaldo.
+  public/         Archivos accesibles por URL, como imagenes de respaldo.
   src/            Codigo fuente de la aplicacion.
     api/          Funciones que se comunican con Laravel.
     assets/       Recursos que pueden importarse desde el codigo.

@@ -9,4 +9,10 @@ const options = {
 };
 const http = axios.create({ ...options, baseURL: apiUrl });
 export const sessionHttp = axios.create({ ...options, baseURL: import.meta.env.VITE_AUTH_URL || backendUrl || (import.meta.env.DEV ? '/backend' : '/') });
+
+/** Sanctum exige la cookie CSRF antes de cualquier petición que modifique datos. */
+export async function ensureCsrfCookie() {
+    await sessionHttp.get('/sanctum/csrf-cookie');
+}
+
 export default http;

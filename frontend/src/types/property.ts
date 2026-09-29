@@ -1,3 +1,5 @@
+import type { Amenity } from './amenity';
+
 export interface PropertyImage {
     id: number;
     uuid: string;
@@ -7,14 +9,6 @@ export interface PropertyImage {
     is_cover: boolean;
     display_order: number;
     is_active: boolean;
-}
-
-export interface Amenity {
-    id: number;
-    name: string;
-    category: string | null;
-    description?: string | null;
-    icon: string | null;
 }
 
 export interface PropertyHost {
@@ -48,4 +42,27 @@ export interface Property {
     host?: PropertyHost;
     images: PropertyImage[];
     amenities?: Amenity[];
+}
+
+/** Valores tal como los escribe el anfitrión; el backend los valida y convierte. */
+export interface PropertyInput {
+    name: string;
+    description: string;
+    property_type: string;
+    address: string;
+    city_id: string;
+    max_guests: string;
+    bathrooms: string;
+    bedrooms: string;
+    beds: string;
+    price: string;
+    currency: string;
+    check_in_time: string | null;
+    check_out_time: string | null;
+    amenities: number[];
+}
+
+// Props de componentes
+export interface PropertyCardProps {
+    property: Property;
 }
