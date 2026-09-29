@@ -8,6 +8,11 @@ export async function getPublicProperties(signal?: AbortSignal) {
     return response.data.data.data;
 }
 
+/** Detalle público de un alojamiento publicado, con fotos, comodidades y anfitrión. */
+export async function getPublicProperty(id: number, signal?: AbortSignal) {
+    return (await http.get<ApiResponse<Property>>(`/public/properties/${id}`, { signal })).data.data;
+}
+
 export async function getHostProperties(page: number, signal?: AbortSignal) {
     return (await http.get<ApiResponse<Paginated<Property>>>('/property', { params: { page }, signal })).data.data;
 }

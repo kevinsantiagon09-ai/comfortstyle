@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import { usePropertyCard } from '../../hooks/properties/usePropertyCard';
+import { propertyDetailPath } from '../../routes/paths';
 import type { PropertyCardProps } from '../../types/property';
 
 export default function PropertyCard({
@@ -7,7 +9,10 @@ export default function PropertyCard({
     const { imageUrl, imageAlt, formattedPrice, handleImageError } = usePropertyCard(property);
 
     return (
-        <article className="overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+        <Link
+            to={propertyDetailPath(property.id)}
+            className="block overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+        >
             <img
                 key={imageUrl}
                 src={imageUrl}
@@ -43,6 +48,6 @@ export default function PropertyCard({
                     {property.currency} por noche
                 </p>
             </div>
-        </article>
+        </Link>
     );
 }

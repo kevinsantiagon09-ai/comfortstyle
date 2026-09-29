@@ -7,7 +7,10 @@ export const paths = {
     host: '/host',
     hostSetup: '/host/setup',
     hostPropertyEdit: '/host/properties/:id/edit',
+    propertyDetail: '/properties/:id',
 } as const;
+
+export const propertyDetailPath = (id: number) => `/properties/${id}`;
 
 export const hostPropertyEditPath = (id: number) => `/host/properties/${id}/edit`;
 

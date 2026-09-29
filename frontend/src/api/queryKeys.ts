@@ -2,6 +2,7 @@
 export const queryKeys = {
     session: ['auth', 'me'] as const,
     publicProperties: ['properties', 'public'] as const,
+    publicProperty: (id: number) => ['properties', 'public', id] as const,
     hostProperties: ['host', 'properties'] as const,
     hostPropertyList: (page: number) => ['host', 'properties', page] as const,
     hostProperty: (id: number) => ['host', 'property', id] as const,

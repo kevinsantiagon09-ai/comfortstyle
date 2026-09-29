@@ -1,4 +1,4 @@
-import type { Amenity } from './amenity';
+import type { Amenity, AmenityGroup } from './amenity';
 
 export interface PropertyImage {
     id: number;
@@ -65,4 +65,17 @@ export interface PropertyInput {
 // Props de componentes
 export interface PropertyCardProps {
     property: Property;
+}
+
+export interface PropertyFeaturesProps {
+    property: Property;
+}
+
+export interface PropertyAmenitiesListProps {
+    groups: AmenityGroup[];
+}
+
+export interface PropertyGalleryProps {
+    images: PropertyImage[];
+    name: string;
 }

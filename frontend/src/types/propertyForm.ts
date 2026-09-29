@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import type { FieldErrors } from './api';
 import type { Property, PropertyInput } from './property';
+import type { TabButtonProps } from './ui';
 
 /** Formulario del alojamiento, compartido por el registro y la edición. */
 export interface SetupForm {
@@ -80,4 +81,11 @@ export interface PhotoPickerProps {
 
 export interface PhotosStepProps {
     propertyId: number;
+}
+
+export interface PropertyEditTabsProps {
+    steps: SetupStep[];
+    tabProps: (index: number) => TabButtonProps;
+    /** Pestañas con errores de validación pendientes. */
+    tabsWithErrors: number[];
 }

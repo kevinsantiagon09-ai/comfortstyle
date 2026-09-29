@@ -8,6 +8,7 @@ import PropertySetupPage from '../pages/host/PropertySetupPage';
 import HomePage from '../pages/public/HomePage';
 import LoginPage from '../pages/public/LoginPage';
 import NotFoundPage from '../pages/public/NotFoundPage';
+import PropertyDetailPage from '../pages/public/PropertyDetailPage';
 import RegisterPage from '../pages/public/RegisterPage';
 import { paths } from './paths';
 import ProtectedRoute from './ProtectedRoute';
@@ -19,6 +20,7 @@ export const router = createBrowserRouter([
         element: <MainLayout />,
         children: [
             { path: paths.home, element: <HomePage /> },
+            { path: paths.propertyDetail, element: <PropertyDetailPage /> },
         ],
     },
     {
