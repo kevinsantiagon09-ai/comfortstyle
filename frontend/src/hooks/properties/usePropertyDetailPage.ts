@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { groupByCategory } from '../../utils/amenities';
 import { toTitleCase } from '../../utils/property';
-import { toPositiveId } from '../../utils/routeParams';
+import { toUuid } from '../../utils/routeParams';
 import { useVirtualTour } from '../propertyPanoramas/useVirtualTour';
 import { usePublicProperty } from './usePublicProperty';
 
@@ -10,8 +10,8 @@ import { usePublicProperty } from './usePublicProperty';
 const RESERVATION_ID = 'reservar';
 
 export function usePropertyDetailPage() {
-    const id = toPositiveId(useParams().id);
-    const query = usePublicProperty(id ?? 0);
+    const uuid = toUuid(useParams().uuid);
+    const query = usePublicProperty(uuid ?? '');
     const property = query.data;
     const [copied, setCopied] = useState(false);
     const tour = useVirtualTour(property?.panoramas, RESERVATION_ID);
@@ -31,10 +31,10 @@ export function usePropertyDetailPage() {
     }
 
     return {
-        valid: id !== null,
+        valid: uuid !== null,
         property,
         amenityGroups,
-        loading: query.isPending && id !== null,
+        loading: query.isPending && uuid !== null,
         error: query.isError ? 'No fue posible cargar el alojamiento.' : null,
         formattedPrice: property ? Number(property.price).toLocaleString('es-CO') : '',
         location: property ? toTitleCase(`${property.city}, ${property.department}`) : '',

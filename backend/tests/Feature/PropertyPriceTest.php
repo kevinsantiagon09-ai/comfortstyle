@@ -63,7 +63,7 @@ class PropertyPriceTest extends TestCase
         $host = $this->host();
         $property = Property::factory()->create(['user_id' => $host->id]);
 
-        $this->actingAs($host)->patchJson('/api/property/'.$property->id, ['price' => 2750000.5])->assertOk()->assertJsonPath('data.price', '2750000.50');
-        $this->patchJson('/api/property/'.$property->id, ['price' => 10000000000])->assertUnprocessable();
+        $this->actingAs($host)->patchJson('/api/property/'.$property->uuid, ['price' => 2750000.5])->assertOk()->assertJsonPath('data.price', '2750000.50');
+        $this->patchJson('/api/property/'.$property->uuid, ['price' => 10000000000])->assertUnprocessable();
     }
 }

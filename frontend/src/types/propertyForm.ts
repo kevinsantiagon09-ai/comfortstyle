@@ -10,6 +10,8 @@ export interface SetupForm {
     description: string;
     property_type: string;
     address: string;
+    latitude: string;
+    longitude: string;
     departmentId: string;
     cityId: string;
     max_guests: string;
@@ -65,7 +67,7 @@ export interface SetupProgressProps {
 }
 
 export interface PropertySetupWizardProps {
-    onCreated: (propertyId: number) => void;
+    onCreated: (propertyUuid: string) => void;
 }
 
 export interface PropertyEditFormProps {
@@ -80,7 +82,7 @@ export interface PhotoPickerProps {
 }
 
 export interface PhotosStepProps {
-    propertyId: number;
+    propertyUuid: string;
 }
 
 export interface PropertyEditTabsProps {

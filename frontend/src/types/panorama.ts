@@ -1,3 +1,5 @@
+import type { LucideIcon } from 'lucide-react';
+
 /** Espacio del recorrido virtual: una foto 360° equirectangular (2:1) y su vista previa liviana. */
 export interface PropertyPanorama {
     id: number;
@@ -12,6 +14,14 @@ export interface PanoramaUpload {
     title: string;
     image: File;
     preview: Blob;
+    /** Foto común convertida a panorama, no capturada con cámara 360°. */
+    converted?: boolean;
+}
+
+export interface PreparedPanorama {
+    file: File;
+    preview: Blob;
+    converted: boolean;
 }
 
 export interface PanoramaFileInfo {
@@ -54,4 +64,33 @@ export interface TourScenesProps {
 
 export interface PanoramaManagerProps {
     propertyId: number;
+}
+
+export interface PanoramaSlot {
+    key: string;
+    title: string;
+    icon: LucideIcon;
+}
+
+/** Fotos 360° elegidas en el registro, por clave de espacio; se suben al crear el alojamiento. */
+export type PanoramaDrafts = Record<string, PanoramaUpload>;
+
+export interface PanoramaSlotsPickerProps {
+    drafts: PanoramaDrafts;
+    errors?: Record<string, string>;
+    /** `changedKey` es el espacio modificado, para limpiar su error. */
+    onChange: (drafts: PanoramaDrafts, changedKey: string) => void;
+    disabled?: boolean;
+}
+
+export interface PanoramaSlotCardProps {
+    slot: PanoramaSlot;
+    draft?: PanoramaUpload;
+    /** Error devuelto por el backend para este espacio. */
+    error?: string;
+    onPick: (upload: PanoramaUpload) => void;
+    onClear: () => void;
+    /** Otra miniatura se soltó aquí: recibe la clave del espacio de origen. */
+    onMove: (fromKey: string) => void;
+    disabled?: boolean;
 }

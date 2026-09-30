@@ -6,5 +6,6 @@ export function usePropertyImages(propertyId: number) {
     return useQuery({
         queryKey: queryKeys.propertyImages(propertyId),
         queryFn: ({ signal }) => getPropertyImages(propertyId, signal),
+        enabled: propertyId > 0,
     });
 }

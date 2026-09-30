@@ -57,6 +57,9 @@ class UpdatePropertyRequest extends FormRequest
                 'max:255',
             ],
 
+            'latitude' => ['nullable', 'numeric', 'between:-90,90', 'required_with:longitude'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180', 'required_with:latitude'],
+
             'department' => ['prohibited'],
 
             'city' => ['prohibited'],
@@ -161,6 +164,10 @@ class UpdatePropertyRequest extends FormRequest
             'property_type.max' => 'El tipo de propiedad no puede superar los 50 caracteres.',
 
             'address.required' => 'La dirección es obligatoria.',
+            'latitude.between' => 'La latitud debe estar entre -90 y 90.',
+            'longitude.between' => 'La longitud debe estar entre -180 y 180.',
+            'latitude.required_with' => 'Elige la ubicación en el mapa.',
+            'longitude.required_with' => 'Elige la ubicación en el mapa.',
             'address.max' => 'La dirección no puede superar los 255 caracteres.',
 
             'department.required' => 'El departamento es obligatorio.',

@@ -9,9 +9,9 @@ export default function ReservationCard({ reservation, cancelling, onCancel }: R
     return (
         <article className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200 p-5">
             <div>
-                <Link to={propertyDetailPath(reservation.property_id)} className="text-lg font-semibold text-slate-900 hover:underline">
-                    {reservation.property?.name}
-                </Link>
+                {reservation.property
+                    ? <Link to={propertyDetailPath(reservation.property.uuid)} className="text-lg font-semibold text-slate-900 hover:underline">{reservation.property.name}</Link>
+                    : <span className="text-lg font-semibold text-slate-900">Alojamiento</span>}
                 <p className="text-sm text-slate-600">{reservation.property?.city}, {reservation.property?.department}</p>
                 <p className="mt-2 text-sm text-slate-700">
                     {reservation.check_in} → {reservation.check_out} · {reservation.nights} {reservation.nights === 1 ? 'noche' : 'noches'} · {reservation.guests} {reservation.guests === 1 ? 'huésped' : 'huéspedes'}

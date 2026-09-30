@@ -9,7 +9,7 @@ export function useDeletePropertyPanorama(propertyId: number) {
         mutationFn: deletePropertyPanorama,
         onSettled: () => Promise.all([
             client.invalidateQueries({ queryKey: queryKeys.propertyPanoramas(propertyId) }),
-            client.invalidateQueries({ queryKey: queryKeys.publicProperty(propertyId) }),
+            client.invalidateQueries({ queryKey: queryKeys.publicProperties }),
         ]),
     });
 }

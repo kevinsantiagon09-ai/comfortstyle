@@ -5,8 +5,8 @@ import type { PhotosStepProps } from '../../types/propertyForm';
 import { apiError } from '../../utils/apiError';
 import { propertyImageUrl } from '../../utils/imageUrl';
 
-export default function PropertyPhotosStep({ propertyId }: PhotosStepProps) {
-    const { property, images, photos, upload, publish, rejected, dropzone: { getRootProps, getInputProps, isDragActive } } = usePropertyPhotosStep(propertyId);
+export default function PropertyPhotosStep({ propertyUuid }: PhotosStepProps) {
+    const { property, images, photos, upload, publish, rejected, dropzone: { getRootProps, getInputProps, isDragActive } } = usePropertyPhotosStep(propertyUuid);
 
     if (property.isPending) return <p role="status">Cargando alojamiento…</p>;
     if (property.isError) return <p role="alert">{apiError(property.error)} <Link to={paths.host} className="text-blue-700 underline">Volver al panel</Link></p>;

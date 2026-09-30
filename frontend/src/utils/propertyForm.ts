@@ -16,7 +16,7 @@ export const toggleId = (ids: number[], id: number) =>
 
 export const toInput = (form: SetupForm): PropertyInput => ({
     name: form.name.trim(), description: form.description.trim(), property_type: form.property_type,
-    address: form.address.trim(), city_id: form.cityId, max_guests: form.max_guests,
+    address: form.address.trim(), latitude: form.latitude || null, longitude: form.longitude || null, city_id: form.cityId, max_guests: form.max_guests,
     bathrooms: form.bathrooms, bedrooms: form.bedrooms, beds: form.beds,
     price: form.price, currency: form.currency,
     check_in_time: form.check_in_time || null, check_out_time: form.check_out_time || null,
@@ -26,7 +26,7 @@ export const toInput = (form: SetupForm): PropertyInput => ({
 /** Datos guardados del alojamiento → formulario editable. Las horas llegan como HH:MM:SS. */
 export const fromProperty = (property: Property): SetupForm => ({
     name: property.name, description: property.description, property_type: property.property_type,
-    address: property.address, departmentId: property.department_id ? String(property.department_id) : '',
+    address: property.address, latitude: property.latitude ?? '', longitude: property.longitude ?? '', departmentId: property.department_id ? String(property.department_id) : '',
     cityId: String(property.city_id), max_guests: String(property.max_guests), bathrooms: String(property.bathrooms),
     bedrooms: String(property.bedrooms), beds: String(property.beds), price: String(Number(property.price)),
     currency: property.currency, check_in_time: property.check_in_time?.slice(0, 5) ?? '',

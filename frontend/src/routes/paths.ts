@@ -6,13 +6,13 @@ export const paths = {
     guest: '/guest',
     host: '/host',
     hostSetup: '/host/setup',
-    hostPropertyEdit: '/host/properties/:id/edit',
-    propertyDetail: '/properties/:id',
+    hostPropertyEdit: '/host/properties/:uuid/edit',
+    propertyDetail: '/properties/:uuid',
 } as const;
 
-export const propertyDetailPath = (id: number) => `/properties/${id}`;
+export const propertyDetailPath = (uuid: string) => `/properties/${uuid}`;
 
-export const hostPropertyEditPath = (id: number) => `/host/properties/${id}/edit`;
+export const hostPropertyEditPath = (uuid: string) => `/host/properties/${uuid}/edit`;
 
 /** El registro abre el paso de fotografías cuando recibe el alojamiento en `?property=`. */
-export const hostPropertyPhotosPath = (id: number) => `${paths.hostSetup}?property=${id}`;
+export const hostPropertyPhotosPath = (uuid: string) => `${paths.hostSetup}?property=${uuid}`;

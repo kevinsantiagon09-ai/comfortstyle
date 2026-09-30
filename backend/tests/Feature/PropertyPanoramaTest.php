@@ -62,7 +62,7 @@ class PropertyPanoramaTest extends TestCase
         Storage::disk('public')->assertExists([$first->json('data.image_path'), $first->json('data.preview_path')]);
 
         $this->getJson('/api/property-panoramas?property_id='.$property->id)->assertOk()->assertJsonCount(2, 'data');
-        $this->getJson('/api/public/properties/'.$property->id)
+        $this->getJson('/api/public/properties/'.$property->uuid)
             ->assertOk()
             ->assertJsonCount(2, 'data.panoramas')
             ->assertJsonPath('data.panoramas.0.title', 'Sala');

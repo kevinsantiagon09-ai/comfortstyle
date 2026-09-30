@@ -55,6 +55,9 @@ class StorePropertyRequest extends FormRequest
                 'max:255',
             ],
 
+            'latitude' => ['nullable', 'numeric', 'between:-90,90', 'required_with:longitude'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180', 'required_with:latitude'],
+
             'department' => ['prohibited'],
 
             'city' => ['prohibited'],
@@ -160,6 +163,10 @@ class StorePropertyRequest extends FormRequest
             'property_type.required' => 'El tipo de propiedad es obligatorio.',
 
             'address.required' => 'La dirección es obligatoria.',
+            'latitude.between' => 'La latitud debe estar entre -90 y 90.',
+            'longitude.between' => 'La longitud debe estar entre -180 y 180.',
+            'latitude.required_with' => 'Elige la ubicación en el mapa.',
+            'longitude.required_with' => 'Elige la ubicación en el mapa.',
             'department.required' => 'El departamento es obligatorio.',
             'city.required' => 'La ciudad es obligatoria.',
 

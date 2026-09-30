@@ -13,6 +13,7 @@
     animation: pano-pan 24s linear infinite;
 }
 
+
 /* El recorrido se abre creciendo desde la galería. */
 @keyframes tour-in {
     from { opacity: 0; transform: scale(0.97); }

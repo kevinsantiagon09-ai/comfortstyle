@@ -50,10 +50,10 @@ class PropertyAccessAndLocationTest extends TestCase
         $own = Property::factory()->create(['user_id' => $host->id]);
         $other = Property::factory()->create();
         $this->actingAs($host)->getJson('/api/property')->assertOk()->assertJsonCount(1, 'data.data')->assertJsonPath('data.data.0.id', $own->id);
-        $this->getJson('/api/property/'.$other->id)->assertForbidden();
-        $this->patchJson('/api/property/'.$other->id, ['name' => 'Changed'])->assertForbidden();
-        $this->patchJson('/api/property/'.$own->id, ['name' => 'Updated'])->assertOk();
-        $this->patchJson('/api/property/'.$own->id, ['user_id' => $other->user_id])->assertUnprocessable();
+        $this->getJson('/api/property/'.$other->uuid)->assertForbidden();
+        $this->patchJson('/api/property/'.$other->uuid, ['name' => 'Changed'])->assertForbidden();
+        $this->patchJson('/api/property/'.$own->uuid, ['name' => 'Updated'])->assertOk();
+        $this->patchJson('/api/property/'.$own->uuid, ['user_id' => $other->user_id])->assertUnprocessable();
     }
 
     public function test_property_creation_uses_session_owner_and_valid_city(): void
@@ -100,7 +100,7 @@ class PropertyAccessAndLocationTest extends TestCase
         $property = Property::factory()->create();
         $inactive = Property::factory()->create(['is_active' => false]);
         $this->getJson('/api/public/properties')->assertOk()->assertJsonCount(1, 'data.data')->assertJsonPath('data.data.0.city', $property->city);
-        $this->getJson('/api/public/properties/'.$inactive->id)->assertNotFound();
+        $this->getJson('/api/public/properties/'.$inactive->uuid)->assertNotFound();
     }
 
     public function test_host_cannot_access_other_hosts_images(): void
