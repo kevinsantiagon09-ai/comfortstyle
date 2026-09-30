@@ -26,7 +26,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('bathrooms')->default(1);
             $table->unsignedSmallInteger('bedrooms')->default(1);
             $table->unsignedSmallInteger('beds')->default(1);
-            $table->decimal('price');
+            $table->decimal('price', 12, 2);
             $table->string('currency', 3)->default('COP');
             $table->time('check_in_time')->nullable();
             $table->time('check_out_time')->nullable();
