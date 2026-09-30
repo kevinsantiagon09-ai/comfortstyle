@@ -79,3 +79,11 @@ export interface PropertyGalleryProps {
     images: PropertyImage[];
     name: string;
 }
+
+export interface PropertyHeaderProps {
+    name: string;
+    location: string;
+    copied: boolean;
+    onShare: () => void;
+}
+
