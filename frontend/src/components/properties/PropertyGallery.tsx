@@ -1,23 +1,27 @@
 import { propertyImageUrl } from '../../utils/imageUrl';
+import { galleryThumbClass } from '../../utils/photos';
 import type { PropertyGalleryProps } from '../../types/property';
 
 export default function PropertyGallery({ images, name }: PropertyGalleryProps) {
     const [main, ...rest] = images;
+    const thumbs = rest.slice(0, 4);
 
     return (
-        <div className="grid gap-2 overflow-hidden rounded-2xl sm:grid-cols-4 sm:grid-rows-2">
+        <div className="grid h-72 gap-2 overflow-hidden rounded-2xl sm:h-[440px] sm:grid-cols-4 sm:grid-rows-2">
             <img
                 src={propertyImageUrl(main?.image_path)}
                 alt={main?.caption ?? name}
-                className="h-72 w-full object-cover sm:col-span-2 sm:row-span-2 sm:h-full"
+                className={`size-full cursor-pointer object-cover transition hover:brightness-90 sm:row-span-2 ${
+                    thumbs.length ? 'sm:col-span-2' : 'sm:col-span-4'
+                }`}
             />
-            {rest.slice(0, 4).map((image) => (
+            {thumbs.map((image, index) => (
                 <img
                     key={image.id}
                     src={propertyImageUrl(image.image_path)}
                     alt={image.caption ?? name}
                     loading="lazy"
-                    className="hidden h-40 w-full object-cover sm:block"
+                    className={`hidden size-full cursor-pointer object-cover transition hover:brightness-90 sm:block ${galleryThumbClass(index, thumbs.length)}`}
                 />
             ))}
         </div>
