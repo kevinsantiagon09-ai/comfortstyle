@@ -1,4 +1,5 @@
 import type { Amenity, AmenityGroup } from './amenity';
+import type { PropertyPanorama } from './panorama';
 
 export interface PropertyImage {
     id: number;
@@ -42,6 +43,7 @@ export interface Property {
     host?: PropertyHost;
     images: PropertyImage[];
     amenities?: Amenity[];
+    panoramas?: PropertyPanorama[];
 }
 
 /** Valores tal como los escribe el anfitrión; el backend los valida y convierte. */

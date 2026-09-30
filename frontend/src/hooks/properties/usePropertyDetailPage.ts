@@ -3,13 +3,18 @@ import { useParams } from 'react-router-dom';
 import { groupByCategory } from '../../utils/amenities';
 import { toTitleCase } from '../../utils/property';
 import { toPositiveId } from '../../utils/routeParams';
+import { useVirtualTour } from '../propertyPanoramas/useVirtualTour';
 import { usePublicProperty } from './usePublicProperty';
+
+/** Id del bloque de reserva, destino del botón «Reservar este lugar» del recorrido. */
+const RESERVATION_ID = 'reservar';
 
 export function usePropertyDetailPage() {
     const id = toPositiveId(useParams().id);
     const query = usePublicProperty(id ?? 0);
     const property = query.data;
     const [copied, setCopied] = useState(false);
+    const tour = useVirtualTour(property?.panoramas, RESERVATION_ID);
 
     const amenityGroups = useMemo(() => groupByCategory(property?.amenities ?? []), [property?.amenities]);
 
@@ -35,5 +40,7 @@ export function usePropertyDetailPage() {
         location: property ? toTitleCase(`${property.city}, ${property.department}`) : '',
         copied,
         share,
+        tour,
+        reservationId: RESERVATION_ID,
     };
 }

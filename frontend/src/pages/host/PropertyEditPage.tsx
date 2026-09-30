@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Pencil } from 'lucide-react';
+import PanoramaManager from '../../components/panoramas/PanoramaManager';
 import PropertyEditForm from '../../components/properties/PropertyEditForm';
 import { usePropertyEditPage } from '../../hooks/properties/usePropertyEditPage';
 import { paths } from '../../routes/paths';
@@ -21,6 +22,7 @@ export default function PropertyEditPage() {
                 <div className="mt-6"><PropertyEditForm key={property.data.id} property={property.data} />
                 
                 </div>
+                <PanoramaManager propertyId={property.data.id} />
             </>}
     </section>;
 }

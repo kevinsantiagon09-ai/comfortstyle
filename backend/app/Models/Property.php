@@ -103,6 +103,12 @@ class Property extends Model
             ->orderBy('name');
     }
 
+    /** Espacios del recorrido virtual 360°, en el orden en que se recorren. */
+    public function panoramas(): HasMany
+    {
+        return $this->hasMany(PropertyPanorama::class, 'property_id')->orderBy('display_order');
+    }
+
     public function reservations(): HasMany
     {
         return $this->hasMany(Reservation::class);
