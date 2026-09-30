@@ -3,11 +3,11 @@ import { updateProperty } from '../../api/properties.api';
 import type { PropertyInput } from '../../types/property';
 import { usePropertyCacheSync } from './usePropertyCacheSync';
 
-export function useUpdateProperty(propertyId: number) {
+export function useUpdateProperty(propertyUuid: string) {
     const syncProperty = usePropertyCacheSync();
 
     return useMutation({
-        mutationFn: (data: PropertyInput) => updateProperty(propertyId, data),
+        mutationFn: (data: PropertyInput) => updateProperty(propertyUuid, data),
         onSuccess: syncProperty,
     });
 }

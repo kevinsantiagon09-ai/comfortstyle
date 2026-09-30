@@ -20,6 +20,7 @@ class StorePropertyPanoramaRequest extends FormRequest
     public function rules(): array
     {
         return [
+
             'property_id' => [
                 'required',
                 'integer',
@@ -36,7 +37,7 @@ class StorePropertyPanoramaRequest extends FormRequest
                 'required',
                 'image',
                 'mimes:jpg,jpeg,webp',
-                'max:20480',
+                'max:102400',
                 'dimensions:ratio=2/1,min_width=2000',
             ],
 
@@ -60,7 +61,7 @@ class StorePropertyPanoramaRequest extends FormRequest
             'image.required' => 'Selecciona una foto 360°.',
             'image.image' => 'El archivo seleccionado debe ser una imagen.',
             'image.mimes' => 'La foto 360° debe ser JPG o WEBP.',
-            'image.max' => 'La foto 360° no puede superar los 20 MB.',
+            'image.max' => 'La foto 360° no puede superar los 100 MB.',
             'image.dimensions' => 'No parece una foto 360°: debe ser el doble de ancha que de alta (2:1) y tener al menos 2000 px de ancho.',
             'preview.required' => 'No se pudo generar la vista previa de la foto. Inténtalo de nuevo.',
             'preview.*' => 'La vista previa de la foto no es válida. Inténtalo de nuevo.',

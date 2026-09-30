@@ -13,6 +13,8 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), tailwindcss()],
+    // Leaflet se carga de forma diferida: prearmarlo desde el inicio evita que Vite lo reempaquete a mitad de sesión.
+    optimizeDeps: { include: ['leaflet', 'react-leaflet'] },
     server: {
       proxy: {
         '/api': { ...proxy },

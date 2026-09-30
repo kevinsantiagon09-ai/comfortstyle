@@ -10,7 +10,7 @@ export default function PropertyCard({
 
     return (
         <Link
-            to={propertyDetailPath(property.id)}
+            to={propertyDetailPath(property.uuid)}
             className="block overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
         >
             <img

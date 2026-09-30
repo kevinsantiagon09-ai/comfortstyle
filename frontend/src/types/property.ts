@@ -28,6 +28,8 @@ export interface Property {
     description: string;
     property_type: string;
     address: string;
+    latitude: string | null;
+    longitude: string | null;
     department: string;
     department_id: number | null;
     city: string;
@@ -52,6 +54,8 @@ export interface PropertyInput {
     description: string;
     property_type: string;
     address: string;
+    latitude: string | null;
+    longitude: string | null;
     city_id: string;
     max_guests: string;
     bathrooms: string;

@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { MAX_PANORAMAS } from '../../constants/panoramas';
 import { apiError, fieldErrors } from '../../utils/apiError';
-import { panoramaFileError, readPanorama } from '../../utils/panoramas';
+import { panoramaFileError, preparePanorama } from '../../utils/panoramas';
 import { useDeletePropertyPanorama } from './useDeletePropertyPanorama';
 import { usePropertyPanoramas } from './usePropertyPanoramas';
 import { useUploadPropertyPanorama } from './useUploadPropertyPanorama';
@@ -35,20 +35,20 @@ export function usePanoramaManager(propertyId: number) {
         event.preventDefault();
         if (upload.isPending || reading) return;
         if (!title.trim()) return setError('Escribe el nombre del espacio, por ejemplo «Sala».');
-        if (!file) return setError('Selecciona una foto 360°.');
+        if (!file) return setError('Selecciona una foto.');
         const fileError = panoramaFileError(file);
         if (fileError) return setError(fileError);
 
         setError(null);
         setReading(true);
         try {
-            const info = await readPanorama(file);
-            upload.mutate({ title: title.trim(), image: info.image, preview: info.preview }, {
+            const { file: ready, preview, converted } = await preparePanorama(file);
+            upload.mutate({ title: title.trim(), image: ready, preview, converted }, {
                 onSuccess: reset,
                 onError: (uploadError) => setError(Object.values(fieldErrors(uploadError))[0] ?? apiError(uploadError)),
             });
         } catch {
-            setError('No pudimos preparar la imagen. Usa un formato compatible con tu navegador, como JPG, PNG o WEBP, y verifica que no esté dañado.');
+            setError('No pudimos procesar la foto. Verifica que el archivo no esté dañado.');
         } finally {
             setReading(false);
         }

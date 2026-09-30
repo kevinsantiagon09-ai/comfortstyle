@@ -2,19 +2,23 @@ import { useState, type FormEvent } from 'react';
 import { LAST_STEP, PHOTOS_STEP, STEP_FIELDS } from '../../constants/propertySetup';
 import { clearPropertySetup, usePropertySetupStore } from '../../store/propertySetupStore';
 import type { PropertyInput } from '../../types/property';
+import type { PanoramaDrafts } from '../../types/panorama';
 import type { SetupField } from '../../types/propertyForm';
 import { fieldErrors } from '../../utils/apiError';
 import { backendField, toInput } from '../../utils/propertyForm';
 import { useLocations } from '../locations/useLocations';
 import { useFieldErrors } from '../ui/useFieldErrors';
-import { useCreateProperty } from './useCreateProperty';
+import { useCreateProperty, type CreatedProperty } from './useCreateProperty';
 import { useValidatePropertyFields } from './useValidatePropertyFields';
 
 /** Asistente de registro: valida cada paso en el backend y registra el alojamiento en el último. */
-export function usePropertySetupWizard(onCreated: (propertyId: number) => void) {
+export function usePropertySetupWizard(onCreated: (propertyUuid: string) => void) {
     const { step, form, setField, toggleAmenity, next, back, goTo } = usePropertySetupStore();
     const { departments, cities } = useLocations(form.departmentId);
     const [photos, setPhotos] = useState<File[]>([]);
+    const [panoramas, setPanoramas] = useState<PanoramaDrafts>({});
+    const [panoramaErrors, setPanoramaErrors] = useState<Record<string, string>>({});
+    const [createdId, setCreatedId] = useState<CreatedProperty | null>(null);
     const { errors, setErrors, clearError } = useFieldErrors();
     const validation = useValidatePropertyFields();
     const registration = useCreateProperty();
@@ -48,13 +52,22 @@ export function usePropertySetupWizard(onCreated: (propertyId: number) => void) 
             onError: (error) => setErrors(fieldErrors(error)),
         },
     );
+    const finish = (propertyUuid: string) => {
+        clearPropertySetup();
+        setPhotos([]);
+        setPanoramas({});
+        onCreated(propertyUuid);
+    };
     const register = () => registration.mutate(
-        { data: toInput(form), images: photos },
+        { data: toInput(form), images: photos, panoramas, existing: createdId ?? undefined },
         {
-            onSuccess: (property) => {
-                clearPropertySetup();
-                setPhotos([]);
-                onCreated(property.id);
+            onSuccess: ({ created, failures }) => {
+                if (Object.keys(failures).length === 0) return finish(created.uuid);
+                // El alojamiento ya existe: se conservan solo los espacios que fallaron para corregirlos o quitarlos.
+                setCreatedId(created);
+                setPanoramaErrors(failures);
+                setPanoramas((current) => Object.fromEntries(Object.entries(current).filter(([key]) => key in failures)));
+                goTo(PHOTOS_STEP);
             },
             onError: (error) => {
                 const found = fieldErrors(error);
@@ -65,10 +78,16 @@ export function usePropertySetupWizard(onCreated: (propertyId: number) => void) 
             },
         },
     );
+    const changePanoramas = (next: PanoramaDrafts, changedKey: string) => {
+        setPanoramas(next);
+        setPanoramaErrors((current) => Object.fromEntries(Object.entries(current).filter(([key]) => key !== changedKey)));
+    };
 
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (busy) return;
+        // Alojamiento ya creado: solo quedan por reintentar las fotos 360° con error.
+        if (createdId) { register(); return; }
         // Las fotos no sobreviven a una recarga: si faltan, se vuelve a su paso antes de registrar.
         if (step >= PHOTOS_STEP && photos.length === 0) {
             setErrors({ images: 'Agrega al menos una fotografía del alojamiento.' });
@@ -84,6 +103,9 @@ export function usePropertySetupWizard(onCreated: (propertyId: number) => void) 
         step,
         form,
         photos,
+        panoramas,
+        panoramaErrors,
+        createdId,
         errors,
         busy,
         validating: validation.isPending,
@@ -94,6 +116,8 @@ export function usePropertySetupWizard(onCreated: (propertyId: number) => void) 
         locationsUnavailable: step === 1 && (cities.isError || departments.isError),
         change,
         changePhotos,
+        changePanoramas,
+        skipPanoramas: () => { if (createdId) finish(createdId.uuid); },
         toggleAmenity: toggle,
         goBack,
         submit,

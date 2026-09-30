@@ -1,6 +1,7 @@
 import { FORM_FIELD_CLASS as field } from '../../constants/styles';
 import { useLocations } from '../../hooks/locations/useLocations';
 import type { SectionProps } from '../../types/propertyForm';
+import LocationMapField from '../map/LocationMapField';
 import FieldError from '../ui/FieldError';
 
 export default function LocationFields({ form, errors, change }: SectionProps) {
@@ -12,5 +13,6 @@ export default function LocationFields({ form, errors, change }: SectionProps) {
         {cities.isError && <p role="alert">No pudimos cargar las ciudades. <button type="button" onClick={() => void cities.refetch()} className="text-blue-700 underline">Reintentar</button></p>}
         {form.departmentId && cities.isSuccess && cities.data.length === 0 && <p role="status">Este departamento todavía no tiene ciudades disponibles.</p>}
         <label className="block">Dirección<input className={field} aria-invalid={!!errors.address} maxLength={255} autoComplete="street-address" value={form.address} onChange={e => change('address', e.target.value)} /><FieldError message={errors.address} /></label>
+        <LocationMapField latitude={form.latitude} longitude={form.longitude} onChange={(latitude, longitude) => { change('latitude', latitude); change('longitude', longitude); }} error={errors.latitude ?? errors.longitude} />
     </>;
 }

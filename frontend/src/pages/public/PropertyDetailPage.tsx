@@ -1,5 +1,6 @@
 import VirtualTour from '../../components/panoramas/VirtualTour';
 import VirtualTourButton from '../../components/panoramas/VirtualTourButton';
+import PropertyLocationSection from '../../components/map/PropertyLocationSection';
 import PropertyAmenitiesList from '../../components/properties/PropertyAmenitiesList';
 import PropertyFeatures from '../../components/properties/PropertyFeatures';
 import PropertyGallery from '../../components/properties/PropertyGallery';
@@ -31,21 +32,20 @@ export default function PropertyDetailPage() {
                 </div>
             )}
 
-            <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
-                <div className="space-y-10">
-                    {property.host && <p className="text-slate-700">Anfitrión: <strong>{property.host.name}</strong></p>}
-                    <p className="whitespace-pre-line text-slate-700">{property.description}</p>
-                    <PropertyFeatures property={property} />
-                    <PropertyAmenitiesList groups={amenityGroups} />
-                </div>
-
-                <aside id={reservationId} className="h-fit scroll-mt-24 space-y-4 rounded-2xl border border-slate-200 p-6 shadow-sm lg:sticky lg:top-24">
-                    <p className="text-slate-900">
-                        <strong className="text-2xl">${formattedPrice}</strong> {property.currency} por noche
-                    </p>
-                    <ReservationForm property={property} />
-                </aside>
+            <div className="space-y-8">
+                {property.host && <p className="text-slate-700">Anfitrión: <strong>{property.host.name}</strong></p>}
+                <p className="whitespace-pre-line text-slate-700">{property.description}</p>
+                <PropertyAmenitiesList groups={amenityGroups} />
+                <PropertyFeatures property={property} />
+                <PropertyLocationSection property={property} />
             </div>
+
+            <aside id={reservationId} className="scroll-mt-24 space-y-4 rounded-2xl border border-slate-200 p-6 shadow-sm md:max-w-md">
+                <p className="text-slate-900">
+                    <strong className="text-2xl">${formattedPrice}</strong> {property.currency} por noche
+                </p>
+                <ReservationForm property={property} />
+            </aside>
         </article>
     );
 }

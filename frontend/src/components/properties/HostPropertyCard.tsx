@@ -19,10 +19,10 @@ export default function HostPropertyCard({ property }: PropertyCardProps) {
             <p className="flex items-center gap-1 text-sm text-slate-500"><MapPin aria-hidden="true" className="h-4 w-4 shrink-0" />{property.city}, {property.department}</p>
             <p className="text-slate-900"><strong>{formatPrice(property)}</strong> <span className="text-sm text-slate-500">por noche</span></p>
             <div className="flex gap-2 border-t border-slate-100 pt-3">
-                <Link to={hostPropertyEditPath(property.id)} className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-blue-700 px-3 py-2 text-sm font-semibold text-white">
+                <Link to={hostPropertyEditPath(property.uuid)} className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-blue-700 px-3 py-2 text-sm font-semibold text-white">
                     <Eye aria-hidden="true" className="h-4 w-4" />Ver detalles
                 </Link>
-                <Link to={hostPropertyPhotosPath(property.id)} className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:border-blue-400">
+                <Link to={hostPropertyPhotosPath(property.uuid)} className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:border-blue-400">
                     {property.is_active ? <><Camera aria-hidden="true" className="h-4 w-4" />Fotografías</> : <><Send aria-hidden="true" className="h-4 w-4" />Publicar</>}
                 </Link>
             </div>

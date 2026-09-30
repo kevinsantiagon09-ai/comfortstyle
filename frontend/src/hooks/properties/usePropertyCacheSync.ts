@@ -7,7 +7,7 @@ export function usePropertyCacheSync() {
     const client = useQueryClient();
 
     return (property: Property) => {
-        client.setQueryData(queryKeys.hostProperty(property.id), property);
+        client.setQueryData(queryKeys.hostProperty(property.uuid), property);
         void client.invalidateQueries({ queryKey: queryKeys.hostProperties });
         void client.invalidateQueries({ queryKey: queryKeys.publicProperties });
     };

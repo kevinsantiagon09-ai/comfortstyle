@@ -9,16 +9,16 @@ export async function getPublicProperties(signal?: AbortSignal) {
 }
 
 /** Detalle público de un alojamiento publicado, con fotos, comodidades y anfitrión. */
-export async function getPublicProperty(id: number, signal?: AbortSignal) {
-    return (await http.get<ApiResponse<Property>>(`/public/properties/${id}`, { signal })).data.data;
+export async function getPublicProperty(uuid: string, signal?: AbortSignal) {
+    return (await http.get<ApiResponse<Property>>(`/public/properties/${uuid}`, { signal })).data.data;
 }
 
 export async function getHostProperties(page: number, signal?: AbortSignal) {
     return (await http.get<ApiResponse<Paginated<Property>>>('/property', { params: { page }, signal })).data.data;
 }
 
-export async function getHostProperty(id: number, signal?: AbortSignal) {
-    return (await http.get<ApiResponse<Property>>(`/property/${id}`, { signal })).data.data;
+export async function getHostProperty(uuid: string, signal?: AbortSignal) {
+    return (await http.get<ApiResponse<Property>>(`/property/${uuid}`, { signal })).data.data;
 }
 
 /** Valida en el backend (Laravel Precognition) solo los campos indicados, sin guardar nada. */
@@ -40,12 +40,12 @@ export async function createProperty(data: PropertyInput, images: File[]) {
 }
 
 /** Actualiza los datos del alojamiento (las fotos se gestionan aparte). */
-export async function updateProperty(id: number, data: PropertyInput) {
+export async function updateProperty(uuid: string, data: PropertyInput) {
     await ensureCsrfCookie();
-    return (await http.patch<ApiResponse<Property>>(`/property/${id}`, data)).data.data;
+    return (await http.patch<ApiResponse<Property>>(`/property/${uuid}`, data)).data.data;
 }
 
-export async function publishProperty(id: number) {
+export async function publishProperty(uuid: string) {
     await ensureCsrfCookie();
-    return (await http.patch<ApiResponse<Property>>(`/property/${id}`, { is_active: true })).data.data;
+    return (await http.patch<ApiResponse<Property>>(`/property/${uuid}`, { is_active: true })).data.data;
 }
