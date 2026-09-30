@@ -1,6 +1,7 @@
 import PropertyAmenitiesList from '../../components/properties/PropertyAmenitiesList';
 import PropertyFeatures from '../../components/properties/PropertyFeatures';
 import PropertyGallery from '../../components/properties/PropertyGallery';
+import ReservationForm from '../../components/reservations/ReservationForm';
 import { usePropertyDetailPage } from '../../hooks/properties/usePropertyDetailPage';
 
 export default function PropertyDetailPage() {
@@ -27,10 +28,11 @@ export default function PropertyDetailPage() {
                     <PropertyAmenitiesList groups={amenityGroups} />
                 </div>
 
-                <aside className="h-fit rounded-2xl border border-slate-200 p-6 shadow-sm lg:sticky lg:top-24">
+                <aside className="h-fit space-y-4 rounded-2xl border border-slate-200 p-6 shadow-sm lg:sticky lg:top-24">
                     <p className="text-slate-900">
                         <strong className="text-2xl">${formattedPrice}</strong> {property.currency} por noche
                     </p>
+                    <ReservationForm property={property} />
                 </aside>
             </div>
         </article>

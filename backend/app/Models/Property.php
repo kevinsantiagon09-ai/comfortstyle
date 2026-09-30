@@ -102,4 +102,9 @@ class Property extends Model
             ->orderBy('category')
             ->orderBy('name');
     }
+
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(Reservation::class);
+    }
 }
