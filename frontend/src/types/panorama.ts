@@ -15,6 +15,7 @@ export interface PanoramaUpload {
 }
 
 export interface PanoramaFileInfo {
+    image: File;
     width: number;
     height: number;
     preview: Blob;
