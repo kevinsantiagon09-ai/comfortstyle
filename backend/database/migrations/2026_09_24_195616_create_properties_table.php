@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('address', 255);
             $table->foreignId('city_id')->constrained()->restrictOnDelete();
             $table->unsignedSmallInteger('max_guests');
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
             $table->unsignedSmallInteger('bathrooms')->default(1);
             $table->unsignedSmallInteger('bedrooms')->default(1);
             $table->unsignedSmallInteger('beds')->default(1);
