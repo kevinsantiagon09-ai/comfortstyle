@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { LogOut } from 'lucide-react';
 import { useNavbar } from '../../hooks/layout/useNavbar';
 import { paths } from '../../routes/paths';
 
@@ -26,8 +27,9 @@ export default function Navbar() {
                                 type="button"
                                 onClick={handleLogout}
                                 disabled={pending}
-                                className="rounded-full border px-4 py-2"
+                                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:opacity-60"
                             >
+                                <LogOut aria-hidden="true" className="h-4 w-4" />
                                 {pending ? 'Cerrando sesión...' : 'Cerrar sesión'}
                             </button>
                         </>

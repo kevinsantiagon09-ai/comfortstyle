@@ -4,7 +4,9 @@ use App\Http\Controllers\Locations\LocationController;
 use App\Http\Controllers\Properties\AmenityController;
 use App\Http\Controllers\Properties\PropertyController;
 use App\Http\Controllers\Properties\PropertyImageController;
+use App\Http\Controllers\Properties\PropertyPanoramaController;
 use App\Http\Controllers\Properties\PublicPropertyController;
+use App\Http\Controllers\Reservations\ReservationController;
 use App\Http\Controllers\Roles\RoleController;
 use App\Http\Controllers\States\EstadoController;
 use App\Http\Controllers\Users\UserController;
@@ -25,6 +27,12 @@ Route::middleware(['auth:sanctum', 'role:ANFITRION'])->group(function () {
     // Precognition permite validar cada paso del asistente con estas mismas reglas antes del registro final.
     Route::apiResource('property', PropertyController::class)->except(['destroy'])->middleware(HandlePrecognitiveRequests::class);
     Route::apiResource('property-images', PropertyImageController::class)->except(['destroy']);
+    Route::apiResource('property-panoramas', PropertyPanoramaController::class)->only(['index', 'store', 'destroy']);
+});
+Route::middleware(['auth:sanctum', 'role:HUESPED'])->group(function () {
+    Route::get('reservations', [ReservationController::class, 'index']);
+    Route::post('reservations', [ReservationController::class, 'store']);
+    Route::patch('reservations/{reservation}/cancel', [ReservationController::class, 'cancel']);
 });
 Route::get('/public/amenities', [AmenityController::class, 'index']);
 Route::get('/public/departments', [LocationController::class, 'departments']);

@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@photo-sphere-viewer/autorotate-plugin": "^5.15.1",
+    "@photo-sphere-viewer/core": "^5.15.1",
+    "@photo-sphere-viewer/gyroscope-plugin": "^5.15.1",
     "@tanstack/react-query": "^5.104.0",
     "axios": "^1.20.0",
     "lucide-react": "^1.48.0",
@@ -17,6 +20,7 @@
     "react-dom": "^19.2.8",
     "react-dropzone": "^20.1.2",
     "react-router-dom": "^7.18.4",
+    "three": "^0.186.1",
     "zustand": "^5.0.15"
   },
   "devDependencies": {

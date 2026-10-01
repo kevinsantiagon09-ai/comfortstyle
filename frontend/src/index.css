@@ -1,1 +1,28 @@
 @import "tailwindcss";
+
+/* Vista previa 360°: desplaza la foto equirectangular en bucle para simular que gira.
+   La imagen mide el doble de ancho que de alto, así que un ciclo completo es -2 × la altura (--pano-h). */
+@keyframes pano-pan {
+    from { background-position-x: 0; }
+    to { background-position-x: calc(var(--pano-h) * -2); }
+}
+
+.pano-preview {
+    background-size: auto 100%;
+    background-repeat: repeat-x;
+    animation: pano-pan 24s linear infinite;
+}
+
+/* El recorrido se abre creciendo desde la galería. */
+@keyframes tour-in {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.tour-in {
+    animation: tour-in 0.35s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pano-preview, .tour-in { animation: none; }
+}

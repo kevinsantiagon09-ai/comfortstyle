@@ -45,6 +45,7 @@ class PublicPropertyController extends Controller
                 'host:id,uuid,name',
                 'location.department',
                 'amenities:id,name,category,icon',
+                'panoramas:id,property_id,title,image_path,preview_path,display_order',
                 'images' => function ($query) {
                     $query
                         ->where('is_active', true)
