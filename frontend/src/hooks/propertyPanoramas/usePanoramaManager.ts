@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { MAX_PANORAMAS } from '../../constants/panoramas';
 import { apiError, fieldErrors } from '../../utils/apiError';
-import { panoramaDimensionsError, panoramaFileError, readPanorama } from '../../utils/panoramas';
+import { panoramaFileError, readPanorama } from '../../utils/panoramas';
 import { useDeletePropertyPanorama } from './useDeletePropertyPanorama';
 import { usePropertyPanoramas } from './usePropertyPanoramas';
 import { useUploadPropertyPanorama } from './useUploadPropertyPanorama';
@@ -43,14 +43,12 @@ export function usePanoramaManager(propertyId: number) {
         setReading(true);
         try {
             const info = await readPanorama(file);
-            const dimensionsError = panoramaDimensionsError(info);
-            if (dimensionsError) return setError(dimensionsError);
-            upload.mutate({ title: title.trim(), image: file, preview: info.preview }, {
+            upload.mutate({ title: title.trim(), image: info.image, preview: info.preview }, {
                 onSuccess: reset,
                 onError: (uploadError) => setError(Object.values(fieldErrors(uploadError))[0] ?? apiError(uploadError)),
             });
         } catch {
-            setError('No pudimos leer la foto. Verifica que el archivo no esté dañado.');
+            setError('No pudimos preparar la imagen. Usa un formato compatible con tu navegador, como JPG, PNG o WEBP, y verifica que no esté dañado.');
         } finally {
             setReading(false);
         }

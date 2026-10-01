@@ -17,9 +17,9 @@ export default function PanoramaManager({ propertyId }: PanoramaManagerProps) {
                     Recorrido virtual 360°
                 </h2>
                 <p className="mt-1 text-sm text-slate-600">
-                    Sube una foto 360° por espacio (sala, cocina, habitación…). Tómala con una cámara 360° o con el modo
-                    «Photo Sphere» del celular. Debe ser JPG o WEBP, el doble de ancha que de alta y de máximo 20 MB.
-                    Revisa que no aparezcan personas, documentos ni reflejos en espejos.
+                    Sube una imagen por espacio (sala, cocina, habitación…) de máximo 20 MB.
+                    Ajustaremos automáticamente su tamaño y formato, añadiendo márgenes cuando haga falta.
+                    Para un recorrido 360° completo, usa una foto panorámica 360°: una foto normal no muestra todo el entorno.
                 </p>
             </header>
 
@@ -61,11 +61,11 @@ export default function PanoramaManager({ propertyId }: PanoramaManagerProps) {
                         />
                     </label>
                     <label className="text-sm font-medium text-slate-700">
-                        Foto 360°
+                        Imagen del espacio
                         <input
                             key={manager.fileInputKey}
                             type="file"
-                            accept=".jpg,.jpeg,.webp"
+                            accept="image/*"
                             onChange={manager.chooseFile}
                             className="mt-1 block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:font-medium"
                         />
@@ -76,7 +76,7 @@ export default function PanoramaManager({ propertyId }: PanoramaManagerProps) {
                         className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-700 px-5 py-2.5 font-semibold text-white hover:bg-blue-800 disabled:opacity-60"
                     >
                         <ImagePlus aria-hidden="true" className="h-5 w-5" />
-                        {manager.progress !== null ? `Subiendo ${manager.progress}%` : manager.pending ? 'Revisando foto…' : 'Agregar espacio'}
+                        {manager.progress !== null ? `Subiendo ${manager.progress}%` : manager.pending ? 'Preparando imagen…' : 'Agregar espacio'}
                     </button>
                 </form>
             )}

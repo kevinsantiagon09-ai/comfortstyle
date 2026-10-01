@@ -2,7 +2,6 @@
 export const MAX_PANORAMAS = 10;
 export const MAX_PANORAMA_SIZE = 20 * 1024 * 1024;
 export const MIN_PANORAMA_WIDTH = 2000;
-export const ACCEPTED_PANORAMA_TYPES = ['image/jpeg', 'image/webp'];
 
 /** Ancho de la vista previa liviana que se genera en el navegador (alto = ancho / 2). */
 export const PANORAMA_PREVIEW_WIDTH = 1024;
