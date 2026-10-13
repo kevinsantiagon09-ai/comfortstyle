@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1900" viewBox="0 0 1800 1900" role="img" aria-labelledby="title desc">
+<title id="title">ComfortStyle — nuevas tablas por módulo</title>
+<desc id="desc">Vista del modelo propuesto. El diagrama Mermaid adjunto detalla las relaciones entre tablas.</desc>
+<rect width="1800" height="1900" fill="#f8fafc"/>
+<style>text{font-family:Arial,sans-serif}.heading{font-size:30px;font-weight:bold;fill:#0f172a}.sub{font-size:17px;fill:#475569}.module{font-size:21px;font-weight:bold;fill:white}.table{font-size:18px;font-weight:bold;fill:#0f172a}.fields{font-size:13px;fill:#475569}</style>
+<text x="40" y="48" class="heading">ComfortStyle · ampliación del modelo de datos</text>
+<text x="40" y="80" class="sub">Propuesta · 13 octubre 2026 · tablas nuevas agrupadas por función</text>
+<rect x="40" y="105" width="1720" height="68" rx="10" fill="#e2e8f0"/>
+<text x="60" y="132" class="table">Referencias existentes</text>
+<text x="60" y="158" class="sub">users · properties · reservations · cities · roles/user_roles · departments · amenities · imágenes/panoramas</text>
+<rect x="40" y="200" width="560" height="760" rx="12" fill="white" stroke="#cbd5e1"/>
+<path d="M 52 200 H 588 Q 600 200 600 212 V 252 H 40 V 212 Q 40 200 52 200" fill="#0369a1"/>
+<text x="56" y="233" class="module">Identidad y prestadores</text>
+<text x="56" y="282" class="table">legal_documents</text>
+<text x="56" y="302" class="fields">Catálogo / entidad independiente</text>
+<text x="56" y="344" class="table">user_consents</text>
+<text x="56" y="364" class="fields">FK → users, legal_documents</text>
+<text x="56" y="406" class="table">login_attempts</text>
+<text x="56" y="426" class="fields">FK → users</text>
+<text x="56" y="468" class="table">providers</text>
+<text x="56" y="488" class="fields">FK → users</text>
+<text x="56" y="530" class="table">drivers</text>
+<text x="56" y="550" class="fields">FK → providers</text>
+<text x="56" y="592" class="table">provider_verifications</text>
+<text x="56" y="612" class="fields">FK → providers, drivers, users</text>
+<text x="56" y="654" class="table">audit_logs</text>
+<text x="56" y="674" class="fields">FK → users</text>
+<rect x="620" y="200" width="560" height="760" rx="12" fill="white" stroke="#cbd5e1"/>
+<path d="M 632 200 H 1168 Q 1180 200 1180 212 V 252 H 620 V 212 Q 620 200 632 200" fill="#047857"/>
+<text x="636" y="233" class="module">Reservas y disponibilidad</text>
+<text x="636" y="282" class="table">quotes</text>
+<text x="636" y="302" class="fields">FK → users, properties</text>
+<text x="636" y="344" class="table">quote_items</text>
+<text x="636" y="364" class="fields">FK → quotes</text>
+<text x="636" y="406" class="table">property_calendar_blocks</text>
+<text x="636" y="426" class="fields">FK → properties, reservations, users</text>
+<text x="636" y="468" class="table">reservation_status_history</text>
+<text x="636" y="488" class="fields">FK → reservations, users</text>
+<rect x="1200" y="200" width="560" height="760" rx="12" fill="white" stroke="#cbd5e1"/>
+<path d="M 1212 200 H 1748 Q 1760 200 1760 212 V 252 H 1200 V 212 Q 1200 200 1212 200" fill="#6d28d9"/>
+<text x="1216" y="233" class="module">Servicios, transporte y ubicación</text>
+<text x="1216" y="282" class="table">services</text>
+<text x="1216" y="302" class="fields">FK → providers, cities</text>
+<text x="1216" y="344" class="table">service_slots</text>
+<text x="1216" y="364" class="fields">FK → services</text>
+<text x="1216" y="406" class="table">service_bookings</text>
+<text x="1216" y="426" class="fields">FK → users, reservations, service_slots</text>
+<text x="1216" y="468" class="table">vehicles</text>
+<text x="1216" y="488" class="fields">FK → providers</text>
+<text x="1216" y="530" class="table">driver_vehicles</text>
+<text x="1216" y="550" class="fields">FK → drivers, vehicles</text>
+<text x="1216" y="592" class="table">transport_bookings</text>
+<text x="1216" y="612" class="fields">FK → service_bookings, drivers, vehicles</text>
+<text x="1216" y="654" class="table">events</text>
+<text x="1216" y="674" class="fields">FK → properties, users</text>
+<text x="1216" y="716" class="table">places</text>
+<text x="1216" y="736" class="fields">FK → cities</text>
+<text x="1216" y="778" class="table">property_recommendations</text>
+<text x="1216" y="798" class="fields">FK → properties, places, events, services</text>
+<text x="1216" y="840" class="table">property_access</text>
+<text x="1216" y="860" class="fields">FK → properties</text>
+<text x="1216" y="902" class="table">road_reports</text>
+<text x="1216" y="922" class="fields">FK → reservations</text>
+<rect x="40" y="990" width="560" height="760" rx="12" fill="white" stroke="#cbd5e1"/>
+<path d="M 52 990 H 588 Q 600 990 600 1002 V 1042 H 40 V 1002 Q 40 990 52 990" fill="#b45309"/>
+<text x="56" y="1023" class="module">Pagos y comisiones</text>
+<text x="56" y="1072" class="table">orders</text>
+<text x="56" y="1092" class="fields">FK → users, reservations, service_bookings</text>
+<text x="56" y="1134" class="table">order_items</text>
+<text x="56" y="1154" class="fields">FK → orders, users, commission_rules</text>
+<text x="56" y="1196" class="table">commission_rules</text>
+<text x="56" y="1216" class="fields">FK → providers</text>
+<text x="56" y="1258" class="table">payment_attempts</text>
+<text x="56" y="1278" class="fields">FK → orders</text>
+<text x="56" y="1320" class="table">payment_webhook_events</text>
+<text x="56" y="1340" class="fields">FK → payment_attempts</text>
+<text x="56" y="1382" class="table">refunds</text>
+<text x="56" y="1402" class="fields">FK → payment_attempts, users</text>
+<text x="56" y="1444" class="table">payment_disputes</text>
+<text x="56" y="1464" class="fields">FK → payment_attempts</text>
+<text x="56" y="1506" class="table">dispute_evidence</text>
+<text x="56" y="1526" class="fields">FK → payment_disputes, users</text>
+<rect x="620" y="990" width="560" height="760" rx="12" fill="white" stroke="#cbd5e1"/>
+<path d="M 632 990 H 1168 Q 1180 990 1180 1002 V 1042 H 620 V 1002 Q 620 990 632 990" fill="#be123c"/>
+<text x="636" y="1023" class="module">Reputación y soporte</text>
+<text x="636" y="1072" class="table">property_reviews</text>
+<text x="636" y="1092" class="fields">FK → reservations</text>
+<text x="636" y="1134" class="table">service_reviews</text>
+<text x="636" y="1154" class="fields">FK → service_bookings</text>
+<text x="636" y="1196" class="table">user_reviews</text>
+<text x="636" y="1216" class="fields">FK → reservations, users</text>
+<text x="636" y="1258" class="table">reports</text>
+<text x="636" y="1278" class="fields">FK → users, properties</text>
+<text x="636" y="1320" class="table">reputation_tiers</text>
+<text x="636" y="1340" class="fields">Catálogo / entidad independiente</text>
+<text x="636" y="1382" class="table">user_reputation</text>
+<text x="636" y="1402" class="fields">FK → users, reputation_tiers</text>
+<text x="636" y="1444" class="table">support_tickets</text>
+<text x="636" y="1464" class="fields">FK → users, reservations, service_bookings</text>
+<text x="636" y="1506" class="table">support_messages</text>
+<text x="636" y="1526" class="fields">FK → support_tickets, users</text>
+<text x="636" y="1568" class="table">support_ratings</text>
+<text x="636" y="1588" class="fields">FK → support_tickets</text>
+<rect x="1200" y="990" width="560" height="760" rx="12" fill="white" stroke="#cbd5e1"/>
+<path d="M 1212 990 H 1748 Q 1760 990 1760 1002 V 1042 H 1200 V 1002 Q 1200 990 1212 990" fill="#0e7490"/>
+<text x="1216" y="1023" class="module">Campañas y comunicaciones</text>
+<text x="1216" y="1072" class="table">marketing_campaigns</text>
+<text x="1216" y="1092" class="fields">FK → users</text>
+<text x="1216" y="1134" class="table">campaign_tiers</text>
+<text x="1216" y="1154" class="fields">FK → marketing_campaigns, reputation_tiers</text>
+<text x="1216" y="1196" class="table">promotions</text>
+<text x="1216" y="1216" class="fields">FK → marketing_campaigns</text>
+<text x="1216" y="1258" class="table">promotion_redemptions</text>
+<text x="1216" y="1278" class="fields">FK → promotions, users, orders</text>
+<text x="1216" y="1320" class="table">notification_preferences</text>
+<text x="1216" y="1340" class="fields">FK → users</text>
+<text x="1216" y="1382" class="table">notifications</text>
+<text x="1216" y="1402" class="fields">FK → users, orders, reservations, service_bookings,</text>
+<text x="1216" y="1417" class="fields">marketing_campaigns</text>
+<text x="1216" y="1444" class="table">notification_deliveries</text>
+<text x="1216" y="1464" class="fields">FK → notifications</text>
+<text x="1216" y="1506" class="table">survey_responses</text>
+<text x="1216" y="1526" class="fields">FK → reservations</text>
+<text x="40" y="1824" class="sub">FK → indica la tabla referenciada. Cardinalidad, campos y restricciones: modelo-datos-ampliacion.md.</text>
+<text x="40" y="1854" class="sub">Diagrama completo de relaciones: modelo-datos-ampliacion.mmd. Esta vista no representa migraciones ejecutadas.</text>
+</svg>

@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10" fill="#64748b"/></marker></defs><rect width="1600" height="1100" fill="#f8fafc"/><style>text{font-family:Inter,Arial,sans-serif} .title{font-size:38px;font-weight:700;fill:#0f172a} .sub{font-size:17px;fill:#64748b} .head{font-size:20px;font-weight:700;fill:#0f172a} .body{font-size:16px;fill:#334155} .label{font-size:14px;font-weight:600;fill:#475569}</style>
+<text x="60" y="65" class="title">ComfortStyle</text>
+<text x="60" y="98" class="sub">Arquitectura de software · Vista de contenedores y componentes</text>
+<text x="60" y="130" class="sub">Estado observado en el repositorio · 05 octubre 2026 · SPA + monolito Laravel por capas</text>
+<rect x="60" y="175" width="450" height="100" rx="16" fill="white" stroke="#cbd5e1"/><rect x="60" y="193" width="5" height="64" rx="2" fill="#64748b"/>
+<text x="82" y="210" class="head">Personas</text>
+<text x="82" y="240" class="body">Visitante · Huésped · Anfitrión</text>
+<rect x="580" y="175" width="960" height="100" rx="16" fill="white" stroke="#cbd5e1"/><rect x="580" y="193" width="5" height="64" rx="2" fill="#64748b"/>
+<text x="602" y="210" class="head">Administración del sistema</text>
+<text x="602" y="240" class="body">SYSTEM_ADMIN → API de usuarios, roles y estados; sin panel React dedicado.</text>
+<path d="M285 275 L285 320" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="295.0" y="287.5" class="label">Interacción</text>
+<path d="M1100 275 L1100 590" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="1110.0" y="422.5" class="label">HTTP · sesión</text>
+<rect x="45" y="310" width="740" height="260" rx="22" fill="#eff6ff" stroke="#93c5fd"/>
+<text x="65" y="345" class="head">01 / NAVEGADOR · React 19 + TypeScript + Vite</text>
+<rect x="65" y="365" width="330" height="175" rx="16" fill="white" stroke="#cbd5e1"/><rect x="65" y="383" width="5" height="139" rx="2" fill="#2563eb"/>
+<text x="87" y="400" class="head">Experiencia de usuario</text>
+<text x="87" y="430" class="body">Catálogo y detalle de alojamiento</text>
+<text x="87" y="455" class="body">Panel de huésped y reservas</text>
+<text x="87" y="480" class="body">Panel de anfitrión y asistente</text>
+<text x="87" y="505" class="body">Visor 360° · Photo Sphere / Three.js</text>
+<rect x="420" y="365" width="345" height="175" rx="16" fill="white" stroke="#cbd5e1"/><rect x="420" y="383" width="5" height="139" rx="2" fill="#2563eb"/>
+<text x="442" y="400" class="head">Estado y comunicación</text>
+<text x="442" y="430" class="body">React Router · acceso por rol</text>
+<text x="442" y="455" class="body">React Query · datos y sesión</text>
+<text x="442" y="480" class="body">Zustand → localStorage del asistente</text>
+<text x="442" y="505" class="body">Axios · cookies + cabecera XSRF</text>
+<path d="M395 455 L420 455" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="45" y="590" width="1100" height="305" rx="22" fill="#f0fdfa" stroke="#5eead4"/>
+<text x="65" y="625" class="head">02 / BACKEND · Laravel 13 + PHP 8.3 · API REST / JSON</text>
+<rect x="65" y="650" width="330" height="210" rx="16" fill="white" stroke="#cbd5e1"/><rect x="65" y="668" width="5" height="174" rx="2" fill="#0d9488"/>
+<text x="87" y="685" class="head">Entrada y seguridad</text>
+<text x="87" y="715" class="body">Rutas públicas y protegidas</text>
+<text x="87" y="740" class="body">Sanctum · sesión y CSRF</text>
+<text x="87" y="765" class="body">RequireRole · permisos por rol</text>
+<text x="87" y="790" class="body">FormRequests · validación</text>
+<text x="87" y="815" class="body">Policies · propiedad del recurso</text>
+<rect x="420" y="650" width="345" height="210" rx="16" fill="white" stroke="#cbd5e1"/><rect x="420" y="668" width="5" height="174" rx="2" fill="#0d9488"/>
+<text x="442" y="685" class="head">Aplicación y negocio</text>
+<text x="442" y="715" class="body">Controllers → Services</text>
+<text x="442" y="740" class="body">Auth · usuarios · roles · estados</text>
+<text x="442" y="765" class="body">Propiedades · imágenes · panoramas</text>
+<text x="442" y="790" class="body">Reservas · disponibilidad y precio</text>
+<text x="442" y="815" class="body">Transacciones y bloqueos de filas</text>
+<rect x="790" y="650" width="335" height="210" rx="16" fill="white" stroke="#cbd5e1"/><rect x="790" y="668" width="5" height="174" rx="2" fill="#0d9488"/>
+<text x="812" y="685" class="head">Persistencia</text>
+<text x="812" y="715" class="body">Modelos Eloquent y relaciones</text>
+<text x="812" y="740" class="body">Consultas, filtros y paginación</text>
+<text x="812" y="765" class="body">Migraciones y seeders</text>
+<text x="812" y="790" class="body">Storage · disco público local</text>
+<path d="M395 755 L420 755" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M765 755 L790 755" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M230 570 L230 650" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="240.0" y="600.0" class="label">HTTP / JSON · /api</text>
+<rect x="1180" y="590" width="360" height="145" rx="16" fill="white" stroke="#cbd5e1"/><rect x="1180" y="608" width="5" height="109" rx="2" fill="#7c3aed"/>
+<text x="1202" y="625" class="head">03 / ARCHIVOS</text>
+<text x="1202" y="655" class="body">Fotos, panoramas y previews</text>
+<text x="1202" y="680" class="body">storage/app/public</text>
+<text x="1202" y="705" class="body">Acceso público: /storage/*</text>
+<path d="M1125 700 L1180 700" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M1360 590 V455 H785" fill="none" stroke="#7c3aed" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<text x="1130" y="435" class="label">Descarga de imágenes / 360°</text>
+<rect x="790" y="935" width="750" height="115" rx="16" fill="white" stroke="#cbd5e1"/><rect x="790" y="953" width="5" height="79" rx="2" fill="#d97706"/>
+<text x="812" y="970" class="head">04 / BASE DE DATOS RELACIONAL</text>
+<text x="812" y="1000" class="body">PostgreSQL en configuración local · SQLite en .env.example</text>
+<text x="812" y="1025" class="body">Usuarios, roles, estados, alojamientos, ubicaciones, comodidades y reservas</text>
+<path d="M955 860 L955 935" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="965.0" y="887.5" class="label">SQL · Eloquent</text>
+<text x="65" y="952" class="label">DECISIONES QUE DEFINEN EL DISEÑO</text>
+<text x="65" y="980" class="body">Reglas de disponibilidad, precio y permisos en el servidor.</text>
+<text x="65" y="1008" class="body">Archivos en disco; metadatos y relaciones en base de datos.</text>
+<text x="65" y="1036" class="body">React Query y Zustand tienen responsabilidades distintas.</text>
+<text x="60" y="1080" class="sub">Las flechas sólidas indican peticiones o llamadas; la flecha violeta discontinua indica lectura de archivos públicos.</text>
+</svg>

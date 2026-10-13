@@ -1,0 +1,153 @@
+%% Propuesta: entidades nuevas y referencias existentes.
+%% Las flechas van de tabla hija hacia tabla referenciada por FK.
+%% La nulabilidad y destinos exclusivos se especifican en el diccionario.
+flowchart LR
+  subgraph existing["EXISTENTES · referencias"]
+    users["users<br/>EXISTENTE"]
+    properties["properties<br/>EXISTENTE"]
+    cities["cities<br/>EXISTENTE"]
+    reservations["reservations<br/>EXISTENTE"]
+  end
+  subgraph module0["Identidad y prestadores"]
+    legal_documents["legal_documents"]
+    user_consents["user_consents<br/>FK: user_id, legal_document_id"]
+    login_attempts["login_attempts"]
+    providers["providers<br/>FK: user_id"]
+    drivers["drivers<br/>FK: provider_id"]
+    provider_verifications["provider_verifications<br/>FK: provider_id"]
+    audit_logs["audit_logs"]
+  end
+  subgraph module1["Reservas y disponibilidad"]
+    quotes["quotes<br/>FK: user_id, property_id"]
+    quote_items["quote_items<br/>FK: quote_id"]
+    property_calendar_blocks["property_calendar_blocks<br/>FK: property_id"]
+    reservation_status_history["reservation_status_history<br/>FK: reservation_id"]
+  end
+  subgraph module2["Servicios, transporte y ubicación"]
+    services["services<br/>FK: provider_id, city_id"]
+    service_slots["service_slots<br/>FK: service_id"]
+    service_bookings["service_bookings<br/>FK: user_id, service_slot_id"]
+    vehicles["vehicles<br/>FK: provider_id"]
+    driver_vehicles["driver_vehicles<br/>FK: driver_id, vehicle_id"]
+    transport_bookings["transport_bookings<br/>FK: service_booking_id"]
+    events["events<br/>FK: property_id, created_by"]
+    places["places<br/>FK: city_id"]
+    property_recommendations["property_recommendations<br/>FK: property_id"]
+    property_access["property_access<br/>FK: property_id"]
+    road_reports["road_reports<br/>FK: reservation_id"]
+  end
+  subgraph module3["Pagos y comisiones"]
+    orders["orders<br/>FK: user_id"]
+    order_items["order_items<br/>FK: order_id, beneficiary_user_id"]
+    commission_rules["commission_rules"]
+    payment_attempts["payment_attempts<br/>FK: order_id"]
+    payment_webhook_events["payment_webhook_events<br/>FK: external_event_id"]
+    refunds["refunds<br/>FK: payment_attempt_id, requested_by"]
+    payment_disputes["payment_disputes<br/>FK: payment_attempt_id"]
+    dispute_evidence["dispute_evidence<br/>FK: payment_dispute_id, uploaded_by"]
+  end
+  subgraph module4["Reputación y soporte"]
+    property_reviews["property_reviews<br/>FK: reservation_id"]
+    service_reviews["service_reviews<br/>FK: service_booking_id"]
+    user_reviews["user_reviews<br/>FK: reservation_id, reviewer_user_id, reviewed_user_id"]
+    reports["reports<br/>FK: reporter_user_id"]
+    reputation_tiers["reputation_tiers"]
+    user_reputation["user_reputation<br/>FK: user_id"]
+    support_tickets["support_tickets<br/>FK: user_id"]
+    support_messages["support_messages<br/>FK: support_ticket_id, sender_user_id"]
+    support_ratings["support_ratings<br/>FK: support_ticket_id"]
+  end
+  subgraph module5["Campañas y comunicaciones"]
+    marketing_campaigns["marketing_campaigns<br/>FK: created_by"]
+    campaign_tiers["campaign_tiers<br/>FK: marketing_campaign_id, reputation_tier_id"]
+    promotions["promotions"]
+    promotion_redemptions["promotion_redemptions<br/>FK: promotion_id, user_id, order_id"]
+    notification_preferences["notification_preferences<br/>FK: user_id"]
+    notifications["notifications<br/>FK: user_id"]
+    notification_deliveries["notification_deliveries<br/>FK: notification_id"]
+    survey_responses["survey_responses<br/>FK: reservation_id"]
+  end
+  user_consents --> users
+  user_consents --> legal_documents
+  login_attempts --> users
+  providers --> users
+  drivers --> providers
+  provider_verifications --> providers
+  provider_verifications --> drivers
+  provider_verifications --> users
+  audit_logs --> users
+  quotes --> users
+  quotes --> properties
+  quote_items --> quotes
+  property_calendar_blocks --> properties
+  property_calendar_blocks --> reservations
+  property_calendar_blocks --> users
+  reservation_status_history --> reservations
+  reservation_status_history --> users
+  services --> providers
+  services --> cities
+  service_slots --> services
+  service_bookings --> users
+  service_bookings --> reservations
+  service_bookings --> service_slots
+  vehicles --> providers
+  driver_vehicles --> drivers
+  driver_vehicles --> vehicles
+  transport_bookings --> service_bookings
+  transport_bookings --> drivers
+  transport_bookings --> vehicles
+  events --> properties
+  events --> users
+  places --> cities
+  property_recommendations --> properties
+  property_recommendations --> places
+  property_recommendations --> events
+  property_recommendations --> services
+  property_access --> properties
+  road_reports --> reservations
+  orders --> users
+  orders --> reservations
+  orders --> service_bookings
+  order_items --> orders
+  order_items --> users
+  order_items --> commission_rules
+  commission_rules --> providers
+  payment_attempts --> orders
+  payment_webhook_events --> payment_attempts
+  refunds --> payment_attempts
+  refunds --> users
+  payment_disputes --> payment_attempts
+  dispute_evidence --> payment_disputes
+  dispute_evidence --> users
+  property_reviews --> reservations
+  service_reviews --> service_bookings
+  user_reviews --> reservations
+  user_reviews --> users
+  reports --> users
+  reports --> properties
+  user_reputation --> users
+  user_reputation --> reputation_tiers
+  support_tickets --> users
+  support_tickets --> reservations
+  support_tickets --> service_bookings
+  support_messages --> support_tickets
+  support_messages --> users
+  support_ratings --> support_tickets
+  marketing_campaigns --> users
+  campaign_tiers --> marketing_campaigns
+  campaign_tiers --> reputation_tiers
+  promotions --> marketing_campaigns
+  promotion_redemptions --> promotions
+  promotion_redemptions --> users
+  promotion_redemptions --> orders
+  notification_preferences --> users
+  notifications --> users
+  notifications --> orders
+  notifications --> reservations
+  notifications --> service_bookings
+  notifications --> marketing_campaigns
+  notification_deliveries --> notifications
+  survey_responses --> reservations
+  reservations -. "ampliar: quote_id" .-> quotes
+  classDef existing fill:#e2e8f0,stroke:#64748b,color:#0f172a
+  class users,properties,cities,reservations existing
