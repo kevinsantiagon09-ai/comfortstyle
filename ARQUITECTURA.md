@@ -297,3 +297,8 @@ Http/Controllers/
 ```
 
 Los namespaces y las referencias de rutas siguen esta estructura. Las URL `/api/...`, sus middleware y permisos se conservan: el prefijo HTTP de la API no depende del nombre de la carpeta de controladores. Los servicios, Requests, modelos y Policies conservan sus responsabilidades y ubicaciones actuales.
+
+
+## 13. Propuesta de marketplace y escalabilidad (1 de octubre de 2026)
+
+La [propuesta ampliada](docs/arquitectura/README.md) documenta restaurantes, domicilios a cualquier dirección, prestadores, vehículos, acceso vial, reseñas, cobros PSE y liquidaciones, medios, Android, cloud y recuperación. Incluye [diagramas navegables](docs/arquitectura/VISOR.html), fuentes UML/Mermaid y un plan de evaluación. Es diseño propuesto, no implementación ni infraestructura desplegada; distingue el estado observado de las extensiones pendientes.
