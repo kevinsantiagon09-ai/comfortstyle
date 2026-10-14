@@ -16,7 +16,7 @@ export function useUploadPropertyPanorama(propertyId: number) {
         },
         onSettled: () => Promise.all([
             client.invalidateQueries({ queryKey: queryKeys.propertyPanoramas(propertyId) }),
-            client.invalidateQueries({ queryKey: queryKeys.publicProperty(propertyId) }),
+            client.invalidateQueries({ queryKey: queryKeys.publicProperties }),
         ]),
     });
 

@@ -25,7 +25,7 @@ Route::middleware(['auth:sanctum', 'role:SYSTEM_ADMIN'])->group(function () {
 });
 Route::middleware(['auth:sanctum', 'role:ANFITRION'])->group(function () {
     // Precognition permite validar cada paso del asistente con estas mismas reglas antes del registro final.
-    Route::apiResource('property', PropertyController::class)->except(['destroy'])->middleware(HandlePrecognitiveRequests::class);
+    Route::apiResource('property', PropertyController::class)->except(['destroy'])->scoped(['property' => 'uuid'])->middleware(HandlePrecognitiveRequests::class);
     Route::apiResource('property-images', PropertyImageController::class)->except(['destroy']);
     Route::apiResource('property-panoramas', PropertyPanoramaController::class)->only(['index', 'store', 'destroy']);
 });
@@ -39,4 +39,6 @@ Route::get('/public/departments', [LocationController::class, 'departments']);
 Route::get('/public/departments/{department}/cities', [LocationController::class, 'cities']);
 
 Route::get('/public/properties', [PublicPropertyController::class, 'index']);
-Route::get('/public/properties/{property}', [PublicPropertyController::class, 'show']);
+// Antes de {property:uuid} para que «map» no se tome como un uuid.
+Route::get('/public/properties/map', [PublicPropertyController::class, 'map']);
+Route::get('/public/properties/{property:uuid}', [PublicPropertyController::class, 'show']);

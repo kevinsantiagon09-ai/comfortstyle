@@ -4,6 +4,7 @@ import type { ApiErrorBody, FieldErrors } from '../types/api';
 export function apiError(error: unknown): string {
     if (isAxiosError<ApiErrorBody>(error)) {
         if (error.response?.status === 401) return 'Tu sesión terminó. Inicia sesión para continuar con tu alojamiento.';
+        if (error.response?.status === 413) return 'La foto es demasiado pesada para el servidor. Usa una más liviana.';
         if (error.response?.status === 419) return 'La sesión caducó. Recarga la página e inténtalo de nuevo.';
         return Object.values(error.response?.data.errors ?? {}).flat().join(' ') || error.response?.data.message || 'No pudimos conectar. Revisa tu conexión e inténtalo de nuevo.';
     }

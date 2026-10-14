@@ -8,11 +8,13 @@ import { usePropertyImages } from './usePropertyImages';
 import { useUploadPropertyImages } from './useUploadPropertyImages';
 
 /** Fotos de un alojamiento ya registrado: se suben al soltarlas y luego se puede publicar. */
-export function usePropertyPhotosStep(propertyId: number) {
-    const property = useHostProperty(propertyId);
+export function usePropertyPhotosStep(propertyUuid: string) {
+    const property = useHostProperty(propertyUuid);
+    /** Las fotos se asocian por id numérico; 0 mientras el alojamiento carga. */
+    const propertyId = property.data?.id ?? 0;
     const images = usePropertyImages(propertyId);
     const upload = useUploadPropertyImages(propertyId);
-    const publish = usePublishProperty(propertyId);
+    const publish = usePublishProperty(propertyUuid);
     const [rejected, setRejected] = useState<string[]>([]);
 
     const dropzone = useDropzone({

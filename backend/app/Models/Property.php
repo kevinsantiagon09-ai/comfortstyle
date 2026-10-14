@@ -70,6 +70,8 @@ class Property extends Model
             'bathrooms' => 'integer',
             'bedrooms' => 'integer',
             'beds' => 'integer',
+            'latitude' => 'decimal:7',
+            'longitude' => 'decimal:7',
             'price' => 'decimal:2',
             'is_active' => 'boolean',
         ];

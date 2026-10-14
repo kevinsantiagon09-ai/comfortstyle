@@ -7,7 +7,7 @@ import { usePropertySetupPage } from '../../hooks/properties/usePropertySetupPag
 import { paths } from '../../routes/paths';
 
 export default function PropertySetupPage() {
-    const { propertyId, invalidProperty, activeStep, showPhotos } = usePropertySetupPage();
+    const { propertyUuid, invalidProperty, activeStep, showPhotos } = usePropertySetupPage();
 
     if (invalidProperty) return <p role="alert">El alojamiento seleccionado no es válido. <Link to={paths.host}>Volver al panel</Link></p>;
 
@@ -17,8 +17,8 @@ export default function PropertySetupPage() {
         <h1 className="mt-2 text-3xl font-bold text-slate-900">Configuremos tu alojamiento</h1>
         <p className="mt-3 text-slate-600">Completa los pasos y registra tu alojamiento listo para recibir huéspedes.</p>
         <SetupProgress activeStep={activeStep} />
-        {propertyId
-            ? <PropertyPhotosStep key={propertyId} propertyId={propertyId} />
+        {propertyUuid
+            ? <PropertyPhotosStep key={propertyUuid} propertyUuid={propertyUuid} />
             : <PropertySetupWizard onCreated={showPhotos} />}
     </section>;
 }

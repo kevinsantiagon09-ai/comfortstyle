@@ -74,7 +74,7 @@ class PropertyAmenitiesTest extends TestCase
         $wifi = Amenity::create(['name' => 'WiFi']);
         $pool = Amenity::create(['name' => 'Piscina']);
         $this->actingAs($this->host());
-        $id = $this->postJson('/api/property', $this->payload(['amenities' => [$wifi->id]]))->json('data.id');
+        $id = $this->postJson('/api/property', $this->payload(['amenities' => [$wifi->id]]))->json('data.uuid');
 
         $this->patchJson("/api/property/{$id}", ['name' => 'Casa renovada', 'price' => '200000', 'amenities' => [$pool->id]])
             ->assertOk()

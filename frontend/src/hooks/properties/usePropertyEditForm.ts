@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SETUP_STEPS, STEP_FIELDS } from '../../constants/propertySetup';
+import { EDIT_TABS, STEP_FIELDS } from '../../constants/propertySetup';
 import { paths } from '../../routes/paths';
 import type { Property } from '../../types/property';
 import type { SetupField, SetupForm } from '../../types/propertyForm';
@@ -13,8 +13,8 @@ import { useUpdateProperty } from './useUpdateProperty';
 /** Edición por pestañas: el formulario se conserva al cambiar de pestaña y se guarda completo. */
 export function usePropertyEditForm(property: Property) {
     const navigate = useNavigate();
-    const update = useUpdateProperty(property.id);
-    const tabs = useTabs(SETUP_STEPS.length);
+    const update = useUpdateProperty(property.uuid);
+    const tabs = useTabs(EDIT_TABS.length);
     const [form, setForm] = useState<SetupForm>(() => fromProperty(property));
     const { errors, setErrors, clearError, hasErrors } = useFieldErrors();
     const tabsWithErrors = STEP_FIELDS.flatMap((fields, index) => fields.some((name) => name in errors) ? [index] : []);

@@ -13,6 +13,7 @@
     animation: pano-pan 24s linear infinite;
 }
 
+
 /* El recorrido se abre creciendo desde la galería. */
 @keyframes tour-in {
     from { opacity: 0; transform: scale(0.97); }
@@ -25,4 +26,81 @@
 
 @media (prefers-reduced-motion: reduce) {
     .pano-preview, .tour-in { animation: none; }
+}
+
+/* Explorador del entorno: la casa emite ondas de radar y los demás alojamientos se ven como etiquetas de precio. */
+@keyframes map-radar {
+    from { transform: scale(0.45); opacity: 0.7; }
+    to { transform: scale(1.9); opacity: 0; }
+}
+
+.map-home {
+    position: relative;
+    display: grid;
+    width: 56px;
+    height: 56px;
+    place-items: center;
+}
+
+.map-home__ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: rgb(29 78 216 / 0.35);
+    animation: map-radar 2.4s ease-out infinite;
+}
+
+.map-home__ring + .map-home__ring { animation-delay: 1.2s; }
+
+.map-home__core {
+    position: relative;
+    display: grid;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    border: 3px solid #fff;
+    border-radius: 9999px;
+    background: #0f172a;
+    color: #fff;
+    box-shadow: 0 10px 25px -5px rgb(15 23 42 / 0.55);
+}
+
+.map-price {
+    display: inline-block;
+    transform: translate(-50%, -50%);
+    border-radius: 9999px;
+    background: #fff;
+    padding: 5px 11px;
+    color: #0f172a;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 4px 14px rgb(15 23 42 / 0.28);
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.map-price.is-active {
+    transform: translate(-50%, -50%) scale(1.15);
+    background: #1d4ed8;
+    color: #fff;
+}
+
+/* La línea hasta el alojamiento resaltado avanza como si alguien caminara hacia él. */
+@keyframes map-route {
+    to { stroke-dashoffset: -24; }
+}
+
+.map-route { animation: map-route 0.8s linear infinite; }
+
+.leaflet-tooltip.map-card {
+    overflow: hidden;
+    border: 0;
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: 0 12px 30px -8px rgb(15 23 42 / 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .map-home__ring, .map-route { animation: none; }
 }
