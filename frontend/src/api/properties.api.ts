@@ -1,11 +1,17 @@
 import http, { ensureCsrfCookie } from './http';
 import type { ApiResponse, Paginated } from '../types/api';
+import type { MapProperty } from '../types/map';
 import type { Property, PropertyInput } from '../types/property';
 
 /** Catálogo público: solo alojamientos publicados. */
 export async function getPublicProperties(signal?: AbortSignal) {
     const response = await http.get<ApiResponse<Paginated<Property>>>('/public/properties', { signal, params: { solo_activos: true } });
     return response.data.data.data;
+}
+
+/** Alojamientos publicados con ubicación, para el mapa. */
+export async function getMapProperties(signal?: AbortSignal) {
+    return (await http.get<ApiResponse<MapProperty[]>>('/public/properties/map', { signal })).data.data;
 }
 
 /** Detalle público de un alojamiento publicado, con fotos, comodidades y anfitrión. */

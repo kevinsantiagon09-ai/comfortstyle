@@ -37,7 +37,8 @@ export default function PropertyDetailPage() {
                 <p className="whitespace-pre-line text-slate-700">{property.description}</p>
                 <PropertyAmenitiesList groups={amenityGroups} />
                 <PropertyFeatures property={property} />
-                <PropertyLocationSection property={property} />
+                {/* La key reinicia el explorador (resaltado, capa, ampliado) al pasar a otro alojamiento desde el carrusel. */}
+                <PropertyLocationSection key={property.uuid} property={property} />
             </div>
 
             <aside id={reservationId} className="scroll-mt-24 space-y-4 rounded-2xl border border-slate-200 p-6 shadow-sm md:max-w-md">

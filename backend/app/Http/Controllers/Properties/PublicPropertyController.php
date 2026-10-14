@@ -36,6 +36,41 @@ class PublicPropertyController extends Controller
         ]);
     }
 
+    /** Alojamientos publicados que tienen ubicación, con lo justo para pintarlos en el mapa. */
+    public function map(): JsonResponse
+    {
+        $properties = Property::query()
+            ->where('is_active', true)
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->with([
+                'images' => function ($query) {
+                    $query
+                        ->where('is_active', true)
+                        ->orderBy('display_order');
+                },
+                'location.department',
+            ])
+            ->latest()
+            ->limit(500)
+            ->get();
+
+        return response()->json([
+            'data' => $properties->map(fn (Property $property) => [
+                'uuid' => $property->uuid,
+                'name' => $property->name,
+                'property_type' => $property->property_type,
+                'price' => $property->price,
+                'currency' => $property->currency,
+                'latitude' => $property->latitude,
+                'longitude' => $property->longitude,
+                'city' => $property->city,
+                'department' => $property->department,
+                'cover_path' => ($property->images->firstWhere('is_cover', true) ?? $property->images->first())?->image_path,
+            ]),
+        ]);
+    }
+
     public function show(Property $property): JsonResponse
     {
         abort_unless($property->is_active, 404);

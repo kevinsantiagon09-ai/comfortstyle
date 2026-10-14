@@ -39,4 +39,6 @@ Route::get('/public/departments', [LocationController::class, 'departments']);
 Route::get('/public/departments/{department}/cities', [LocationController::class, 'cities']);
 
 Route::get('/public/properties', [PublicPropertyController::class, 'index']);
+// Antes de {property:uuid} para que «map» no se tome como un uuid.
+Route::get('/public/properties/map', [PublicPropertyController::class, 'map']);
 Route::get('/public/properties/{property:uuid}', [PublicPropertyController::class, 'show']);

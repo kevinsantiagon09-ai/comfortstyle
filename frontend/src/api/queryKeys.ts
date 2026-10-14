@@ -2,6 +2,7 @@
 export const queryKeys = {
     session: ['auth', 'me'] as const,
     publicProperties: ['properties', 'public'] as const,
+    mapProperties: ['properties', 'public', 'map'] as const,
     publicProperty: (uuid: string) => ['properties', 'public', uuid] as const,
     hostProperties: ['host', 'properties'] as const,
     hostPropertyList: (page: number) => ['host', 'properties', page] as const,
@@ -11,6 +12,7 @@ export const queryKeys = {
     departments: ['locations', 'departments'] as const,
     cities: (departmentId: string) => ['locations', 'cities', departmentId] as const,
     amenities: ['amenities'] as const,
+    geocode: (place: string) => ['geocode', place] as const,
     guestReservations: ['guest', 'reservations'] as const,
     guestReservationList: (page: number) => ['guest', 'reservations', page] as const,
 };
