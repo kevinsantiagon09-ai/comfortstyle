@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Mail\AuthVerificationCode;
 use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use RuntimeException;
 use Tests\TestCase;
 
@@ -17,6 +19,7 @@ class DatabaseSeederTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        Mail::fake();
         config(['auth.admin' => ['name' => 'Admin', 'email' => 'admin@comfortstyle.test', 'password' => 'Secreto123']]);
     }
 
@@ -52,8 +55,19 @@ class DatabaseSeederTest extends TestCase
     {
         $this->seed(DatabaseSeeder::class);
 
-        $this->postJson('/login', ['email' => 'admin@comfortstyle.test', 'password' => 'Secreto123'])->assertOk();
-        $this->getJson('/api/roles')->assertOk();
+        $response = $this->withCredentials()->withCookie(config('session.cookie'), session()->getId())
+            ->postJson('/login', ['email' => 'admin@comfortstyle.test', 'password' => 'Secreto123'])
+            ->assertOk()->assertJsonPath('data.status', 'mfa_required');
+        $this->assertGuest();
+        $this->withCookie(config('session.cookie'), session()->getId())
+            ->getJson('/api/roles')->assertUnauthorized();
+        $this->withCredentials()->withCookie(config('session.cookie'), session()->getId())
+            ->postJson('/mfa/verify', [
+                'challenge_id' => $response->json('data.challenge_id'),
+                'code' => Mail::sent(AuthVerificationCode::class)->last()->code,
+            ])->assertOk();
+        $this->withCookie(config('session.cookie'), session()->getId())
+            ->getJson('/api/roles')->assertOk();
     }
 
     public function test_seeded_roles_allow_public_registration(): void

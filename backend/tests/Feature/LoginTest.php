@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Mail\AuthVerificationCode;
 use App\Models\Estado;
 use App\Models\User;
 use Database\Seeders\EstadoSeeder;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
@@ -16,6 +18,7 @@ class LoginTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        Mail::fake();
         $this->seed([RoleSeeder::class, EstadoSeeder::class]);
     }
 
@@ -30,14 +33,24 @@ class LoginTest extends TestCase
 
     private function login(array $data)
     {
-        return $this->postJson('/login', $data);
+        return $this->withCredentials()->withCookie(config('session.cookie'), session()->getId())
+            ->postJson('/login', $data);
     }
 
-    public function test_active_user_logs_in(): void
+    public function test_active_user_logs_in_after_verifying_email_code(): void
     {
         $user = $this->user();
 
-        $this->login(['email' => ' ana@example.org ', 'password' => 'Password123'])->assertOk()->assertJsonPath('data.id', $user->id);
+        $response = $this->login(['email' => ' ana@example.org ', 'password' => 'Password123'])
+            ->assertOk()->assertJsonPath('data.status', 'mfa_required');
+        $this->assertGuest();
+        Mail::assertSent(AuthVerificationCode::class, fn (AuthVerificationCode $mail): bool => $mail->hasTo($user->email));
+
+        $this->withCredentials()->withCookie(config('session.cookie'), session()->getId())
+            ->postJson('/mfa/verify', [
+                'challenge_id' => $response->json('data.challenge_id'),
+                'code' => Mail::sent(AuthVerificationCode::class)->last()->code,
+            ])->assertOk()->assertJsonPath('data.id', $user->id);
         $this->assertAuthenticatedAs($user);
     }
 
@@ -110,13 +123,16 @@ class LoginTest extends TestCase
         $this->assertTrue(User::where('email', 'ana@example.org')->firstOrFail()->isActive());
     }
 
-    public function test_login_is_throttled(): void
+    public function test_login_is_blocked_on_the_tenth_failed_attempt(): void
     {
         $this->user();
-        foreach (range(1, 5) as $attempt) {
+        foreach (range(1, 9) as $attempt) {
             $this->login(['email' => 'ana@example.org', 'password' => 'Otra12345'])->assertUnprocessable();
         }
 
+        $this->login(['email' => 'ana@example.org', 'password' => 'Otra12345'])
+            ->assertTooManyRequests()->assertJsonPath('code', 'auth_locked')->assertHeader('Retry-After', '86400');
         $this->login(['email' => 'ana@example.org', 'password' => 'Password123'])->assertTooManyRequests();
+        $this->assertGuest();
     }
 }

@@ -134,8 +134,8 @@ class PropertyAccessAndLocationTest extends TestCase
 
     public function test_administrator_can_list_users_and_public_registration_cannot_assign_admin(): void
     {
-        $this->actingAs($this->userWithRole('SYSTEM_ADMIN'))->getJson('/api/users')->assertOk();
         $this->postJson('/register', ['name' => 'Test', 'email' => 'test@example.org', 'password' => 'Password123', 'password_confirmation' => 'Password123', 'role' => 'SYSTEM_ADMIN'])->assertUnprocessable()->assertJsonValidationErrors('role');
+        $this->actingAs($this->userWithRole('SYSTEM_ADMIN'))->getJson('/api/users')->assertOk();
     }
 
     public function test_host_cannot_upload_to_another_property_or_move_an_image(): void

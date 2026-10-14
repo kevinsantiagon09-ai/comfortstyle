@@ -3,12 +3,18 @@ export const paths = {
     home: '/',
     login: '/login',
     register: '/register',
+    forgotPassword: '/forgot-password',
+    resetPassword: '/reset-password',
     guest: '/guest',
     host: '/host',
     hostSetup: '/host/setup',
     hostPropertyEdit: '/host/properties/:uuid/edit',
     propertyDetail: '/properties/:uuid',
 } as const;
+
+export const forgotPasswordPath = (email = '') => email.trim()
+    ? `${paths.forgotPassword}?${new URLSearchParams({ email: email.trim() })}`
+    : paths.forgotPassword;
 
 export const propertyDetailPath = (uuid: string) => `/properties/${uuid}`;
 

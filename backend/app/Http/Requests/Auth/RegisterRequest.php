@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
+use App\Services\Auth\AuthAttemptService;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\Validator;
 use Override;
 
 class RegisterRequest extends FormRequest
@@ -21,6 +24,12 @@ class RegisterRequest extends FormRequest
     #[Override]
     protected function prepareForValidation(): void
     {
+        if ($this->filled('email')) {
+            $this->merge([
+                'email' => app(AuthAttemptService::class)->normalizeEmail($this->string('email')->toString()),
+            ]);
+        }
+
         if ($this->filled('role')) {
             $this->merge([
                 'role' => strtoupper(
@@ -66,6 +75,21 @@ class RegisterRequest extends FormRequest
                     'ANFITRION',
                 ]),
             ],
+        ];
+    }
+
+    public function after(): array
+    {
+        return [
+            function (Validator $validator): void {
+                if ($validator->errors()->has('email')) {
+                    return;
+                }
+
+                if (User::query()->whereRaw('LOWER(email) = ?', [$this->input('email')])->exists()) {
+                    $validator->errors()->add('email', 'Ya existe una cuenta con este correo.');
+                }
+            },
         ];
     }
 

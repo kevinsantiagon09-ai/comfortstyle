@@ -19,7 +19,10 @@ export default function PropertySetupWizard({ onCreated }: PropertySetupWizardPr
 
     return <form onSubmit={submit} noValidate className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <fieldset disabled={busy} className="space-y-5">
-            <legend className="mb-5 flex items-center gap-2 text-xl font-semibold"><StepIcon aria-hidden="true" className="h-6 w-6 text-blue-700" />{SETUP_STEPS[step].label}</legend>
+            <legend className="mb-5 flex items-center gap-2 text-xl font-semibold">
+                <StepIcon aria-hidden="true" className="h-6 w-6 text-blue-700" />
+                <span>{SETUP_STEPS[step].label}</span>
+            </legend>
             {step === 0 && <DetailsFields form={form} errors={errors} change={change} autoFocus />}
             {step === 1 && <LocationFields form={form} errors={errors} change={change} />}
             {step === 2 && <CapacityFields form={form} errors={errors} change={change} />}

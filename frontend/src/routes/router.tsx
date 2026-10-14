@@ -7,9 +7,11 @@ import PropertyEditPage from '../pages/host/PropertyEditPage';
 import PropertySetupPage from '../pages/host/PropertySetupPage';
 import HomePage from '../pages/public/HomePage';
 import LoginPage from '../pages/public/LoginPage';
+import ForgotPasswordPage from '../pages/public/ForgotPasswordPage';
 import NotFoundPage from '../pages/public/NotFoundPage';
 import PropertyDetailPage from '../pages/public/PropertyDetailPage';
 import RegisterPage from '../pages/public/RegisterPage';
+import ResetPasswordPage from '../pages/public/ResetPasswordPage';
 import { paths } from './paths';
 import ProtectedRoute from './ProtectedRoute';
 import RoleRoute from './RoleRoute';
@@ -28,6 +30,8 @@ export const router = createBrowserRouter([
         children: [
             { path: paths.login, element: <LoginPage /> },
             { path: paths.register, element: <RegisterPage /> },
+            { path: paths.forgotPassword, element: <ForgotPasswordPage /> },
+            { path: paths.resetPassword, element: <ResetPasswordPage /> },
         ],
     },
 

@@ -13,51 +13,59 @@ use Illuminate\Validation\ValidationException;
 
 class AuthService
 {
+    public function __construct(protected AuthAttemptService $attempts) {}
+
     public function register(array $data): User
     {
-        return DB::transaction(function () use ($data): User {
-            $role = Role::query()
-                ->where('name', $data['role'])
-                ->where('is_active', true)
-                ->first();
+        return $this->attempts->withAccountLock($data['email'], function (string $email) use ($data): User {
+            $this->attempts->ensureNotLocked($email);
 
-            if ($role === null) {
+            if (User::query()->whereRaw('LOWER(email) = ?', [$email])->exists()) {
                 throw ValidationException::withMessages([
-                    'role' => ['El tipo de cuenta seleccionado no está disponible.'],
+                    'email' => ['Ya existe una cuenta con este correo.'],
                 ]);
             }
 
-            unset(
-                $data['role'],
-                $data['password_confirmation']
-            );
+            return DB::transaction(function () use ($data): User {
+                $role = Role::query()
+                    ->where('name', $data['role'])
+                    ->where('is_active', true)
+                    ->first();
 
-            $data['password'] = Hash::make(
-                $data['password']
-            );
-            $data['status_id'] = Estado::activo()->id;
+                if ($role === null) {
+                    throw ValidationException::withMessages([
+                        'role' => ['El tipo de cuenta seleccionado no está disponible.'],
+                    ]);
+                }
 
-            $user = User::create($data);
+                unset(
+                    $data['role'],
+                    $data['password_confirmation']
+                );
 
-            $user->roles()->attach($role->id, [
-                'uuid' => (string) Str::uuid(),
-                'assigned_at' => now(),
-            ]);
+                $data['password'] = Hash::make(
+                    $data['password']
+                );
+                $data['status_id'] = Estado::activo()->id;
 
-            Auth::login($user);
+                $user = User::create($data);
 
-            request()->session()->regenerate();
+                $user->roles()->attach($role->id, [
+                    'uuid' => (string) Str::uuid(),
+                    'assigned_at' => now(),
+                ]);
 
-            return $user->load('roles');
+                return $user->load('roles');
+            });
         });
     }
 
     /**
-     * Inicia sesión con un usuario ya verificado por LoginRequest.
+     * Inicia sesión después de verificar las credenciales y el código MFA.
      */
     public function login(User $user): User
     {
-        Auth::login($user);
+        Auth::guard('web')->login($user);
 
         request()->session()->regenerate();
 

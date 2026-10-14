@@ -26,4 +26,35 @@ class CorsConfigurationTest extends TestCase
         $this->preflight('https://sitio-desconocido.example')
             ->assertHeaderMissing('Access-Control-Allow-Origin');
     }
+
+    public function test_mfa_endpoints_allow_frontend_preflight_requests(): void
+    {
+        foreach (['verify', 'resend', 'cancel'] as $action) {
+            $this->call('OPTIONS', '/mfa/'.$action, server: [
+                'HTTP_ORIGIN' => 'http://localhost:5173',
+                'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST',
+                'HTTP_ACCESS_CONTROL_REQUEST_HEADERS' => 'Content-Type,X-XSRF-TOKEN',
+            ])->assertHeader('Access-Control-Allow-Origin', 'http://localhost:5173')
+                ->assertHeader('Access-Control-Allow-Credentials', 'true');
+        }
+    }
+
+    public function test_mfa_responses_expose_retry_after_to_the_frontend(): void
+    {
+        $this->postJson('/mfa/verify', [], ['Origin' => 'http://localhost:5173'])
+            ->assertUnprocessable()
+            ->assertHeader('Access-Control-Expose-Headers', 'Retry-After');
+    }
+
+    public function test_password_recovery_endpoints_allow_frontend_preflight_requests(): void
+    {
+        foreach (['forgot-password', 'reset-password'] as $path) {
+            $this->call('OPTIONS', '/'.$path, server: [
+                'HTTP_ORIGIN' => 'http://localhost:5173',
+                'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST',
+                'HTTP_ACCESS_CONTROL_REQUEST_HEADERS' => 'Content-Type,X-XSRF-TOKEN',
+            ])->assertHeader('Access-Control-Allow-Origin', 'http://localhost:5173')
+                ->assertHeader('Access-Control-Allow-Credentials', 'true');
+        }
+    }
 }

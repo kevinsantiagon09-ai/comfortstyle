@@ -30,13 +30,53 @@ export interface RegisterData {
 
 export type AuthResponse = ApiResponse<AuthUser>;
 
+export interface MfaChallenge {
+    status: 'mfa_required';
+    challenge_id: string;
+    method: 'email';
+    masked_email: string;
+    expires_at: string;
+    resend_after: number;
+}
+
+export type AuthChallengeResponse = ApiResponse<MfaChallenge>;
+
+export interface MfaVerification {
+    challenge_id: string;
+    code: string;
+}
+
+export interface ForgotPasswordData {
+    email: string;
+}
+
+export interface ForgotPasswordResponse {
+    message: string;
+    resend_after: number;
+}
+
+export interface ResetPasswordData {
+    token: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+}
+
+export interface ResetPasswordResponse {
+    message: string;
+}
+
+export type AuthFormPhase =
+    | { step: 'credentials' }
+    | { step: 'mfa'; challenge: MfaChallenge; resendAvailableAt: number };
+
 export interface AuthSession {
     user: AuthUser | null;
     loading: boolean;
     isAuthenticated: boolean;
 }
 
-export type AuthField = 'name' | 'email' | 'password' | 'password_confirmation' | 'role';
+export type AuthField = 'name' | 'email' | 'password' | 'password_confirmation' | 'role' | 'code';
 export type AuthFieldErrors = Partial<Record<AuthField, string>>;
 
 // Props de componentes

@@ -3,10 +3,10 @@
 namespace App\Http\Requests\Auth;
 
 use App\Models\User;
+use App\Services\Auth\AuthAttemptService;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
 class LoginRequest extends FormRequest
@@ -24,7 +24,7 @@ class LoginRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         if ($this->filled('email')) {
-            $this->merge(['email' => trim($this->string('email')->toString())]);
+            $this->merge(['email' => app(AuthAttemptService::class)->normalizeEmail($this->string('email')->toString())]);
         }
     }
 
@@ -41,7 +41,6 @@ class LoginRequest extends FormRequest
                 'required',
                 'email',
                 'max:255',
-                Rule::exists('users', 'email')->whereNull('deleted_at'),
             ],
             'password' => [
                 'required',
@@ -62,21 +61,39 @@ class LoginRequest extends FormRequest
                     return;
                 }
 
-                $user = User::with('status')->where('email', $this->input('email'))->first();
+                $attempts = app(AuthAttemptService::class);
 
-                if (! Hash::check($this->input('password'), $user->password)) {
-                    $validator->errors()->add('password', 'La contraseña es incorrecta.');
+                $attempts->withAccountLock($this->input('email'), function (string $email) use ($attempts, $validator): void {
+                    $attempts->ensureNotLocked($email);
 
-                    return;
-                }
+                    $user = User::with('status')
+                        ->whereRaw('LOWER(email) = ?', [$email])
+                        ->whereNull('deleted_at')
+                        ->first();
 
-                if (! $user->isActive()) {
-                    $validator->errors()->add('email', 'Tu cuenta está inactiva. Comunícate con el administrador.');
+                    if ($user === null) {
+                        $attempts->recordFailure($email);
+                        $validator->errors()->add('email', 'No existe una cuenta con este correo.');
 
-                    return;
-                }
+                        return;
+                    }
 
-                $this->authenticatedUser = $user;
+                    if (! Hash::check($this->input('password'), $user->password)) {
+                        $attempts->recordFailure($email);
+                        $validator->errors()->add('password', 'La contraseña es incorrecta.');
+
+                        return;
+                    }
+
+                    if (! $user->isActive()) {
+                        $attempts->recordFailure($email);
+                        $validator->errors()->add('email', 'Tu cuenta está inactiva. Comunícate con el administrador.');
+
+                        return;
+                    }
+
+                    $this->authenticatedUser = $user;
+                });
             },
         ];
     }

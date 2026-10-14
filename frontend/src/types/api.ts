@@ -17,6 +17,9 @@ export interface Paginated<T> {
 export interface ApiErrorBody {
     message?: string;
     errors?: Record<string, string[]>;
+    code?: string;
+    retry_after?: number;
+    account_created?: boolean;
 }
 
 /** Mensaje de error por nombre de campo. */
