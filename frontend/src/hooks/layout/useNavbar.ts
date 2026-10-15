@@ -1,5 +1,5 @@
-import { useAuth } from '../auth/useAuth';
-import { useLogout } from '../auth/useLogout';
+import { useAuth } from '../auth/session/useAuth';
+import { useLogout } from '../auth/session/useLogout';
 
 export function useNavbar() {
     const { user, isAuthenticated } = useAuth();

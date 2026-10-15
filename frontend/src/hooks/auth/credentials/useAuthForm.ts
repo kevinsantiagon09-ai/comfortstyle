@@ -1,14 +1,16 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { isAxiosError } from 'axios';
-import type { ApiErrorBody } from '../../types/api';
-import type { AuthField, AuthFieldErrors, AuthFormPhase, MfaChallenge, UserRole } from '../../types/auth';
-import { dashboardPath } from '../../utils/auth';
-import { useAuth } from './useAuth';
-import { useCancelMfa } from './useCancelMfa';
+import { forgotPasswordPath, paths } from '../../../routes/paths';
+import type { ApiErrorBody } from '../../../types/api';
+import type { AuthField, AuthFieldErrors, AuthFormPhase, MfaChallenge, MfaChallengeFormProps, UserRole } from '../../../types/auth';
+import type { PasswordFieldProps } from '../../../types/ui';
+import { dashboardPath } from '../../../utils/auth';
+import { useAuth } from '../session/useAuth';
+import { useCancelMfa } from '../mfa/useCancelMfa';
 import { useLogin } from './useLogin';
 import { useRegister } from './useRegister';
-import { useResendMfa } from './useResendMfa';
-import { useVerifyMfa } from './useVerifyMfa';
+import { useResendMfa } from '../mfa/useResendMfa';
+import { useVerifyMfa } from '../mfa/useVerifyMfa';
 
 const authFields: AuthField[] = ['name', 'email', 'password', 'password_confirmation', 'role', 'code'];
 type AuthOperation = 'credentials' | 'verify' | 'resend' | 'cancel';
@@ -40,6 +42,7 @@ export function useAuthForm(registerMode: boolean) {
     const [lock, setLock] = useState<{ until: number; message: string } | null>(null);
     const [now, setNow] = useState(() => Date.now());
     const effectiveRegisterMode = registerMode && !accountCreated;
+    const passwordAutoComplete: PasswordFieldProps['autoComplete'] = effectiveRegisterMode ? 'new-password' : 'current-password';
     const pending = login.isPending || register.isPending || verify.isPending || resend.isPending || cancel.isPending;
     const expiresAt = phase.step === 'mfa' ? Date.parse(phase.challenge.expires_at) : null;
     const lockSeconds = Math.max(0, Math.ceil(((lock?.until ?? now) - now) / 1000));
@@ -265,9 +268,48 @@ export function useAuthForm(registerMode: boolean) {
         });
     };
 
+    const inputClass = (field: AuthField) => `mt-1 w-full rounded-lg border px-3 py-2 ${fieldErrors[field] ? 'border-red-600' : 'border-slate-300'}`;
+    const mfaForm: MfaChallengeFormProps | null = phase.step === 'mfa' ? {
+        challenge: phase.challenge,
+        code,
+        codeError: fieldErrors.code,
+        formError,
+        notice,
+        expiresIn,
+        resendIn,
+        pending,
+        verifying: verify.isPending,
+        resending: resend.isPending,
+        canceling: cancel.isPending,
+        blocked: lockSeconds > 0,
+        accountCreated,
+        onCodeChange: changeCode,
+        onSubmit: submitCode,
+        onResend: resendCode,
+        onCancel: cancelChallenge,
+    } : null;
+
     return {
         loading,
         registerMode: effectiveRegisterMode,
+        title: mfaForm ? 'Verifica tu correo' : effectiveRegisterMode ? 'Crear una cuenta' : 'Iniciar sesión',
+        description: effectiveRegisterMode
+            ? 'Confirmaremos tu correo con un código para completar el registro.'
+            : 'Después de ingresar tus datos, confirma tu identidad con un código enviado a tu correo.',
+        passwordAutoComplete,
+        passwordMinLength: effectiveRegisterMode ? 8 : undefined,
+        showLock: lockSeconds > 0,
+        submitDisabled: pending || lockSeconds > 0,
+        submitLabel: pending ? 'Procesando...' : 'Continuar',
+        showForgotPassword: !effectiveRegisterMode,
+        forgotPasswordTo: forgotPasswordPath(credentials.email),
+        alternativeLink: {
+            to: effectiveRegisterMode ? paths.login : paths.register,
+            onClick: registerMode && accountCreated ? restartRegistration : resetErrors,
+        },
+        alternativeLabel: effectiveRegisterMode ? 'Ya tengo una cuenta' : 'Crear una cuenta',
+        mfaForm,
+        inputClass,
         accountCreated,
         redirectTo: user ? dashboardPath(user, registerMode) : null,
         phase,

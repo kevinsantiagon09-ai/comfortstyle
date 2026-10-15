@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import * as authApi from '../../api/auth.api';
-import { useSetSession } from './useSetSession';
+import * as authApi from '../../../api/auth/auth.api';
+import { useSetSession } from '../session/useSetSession';
 
 export function useVerifyMfa() {
     const setSession = useSetSession();

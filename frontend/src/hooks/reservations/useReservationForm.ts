@@ -5,7 +5,7 @@ import type { Property } from '../../types/property';
 import { apiError, fieldErrors } from '../../utils/apiError';
 import { hasRole } from '../../utils/auth';
 import { formatMoney, nightsBetween, todayIso } from '../../utils/reservation';
-import { useAuth } from '../auth/useAuth';
+import { useAuth } from '../auth/session/useAuth';
 import { useFieldErrors } from '../ui/useFieldErrors';
 import { useCreateReservation } from './useCreateReservation';
 

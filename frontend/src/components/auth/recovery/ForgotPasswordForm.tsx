@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom';
-import { useForgotPasswordForm } from '../../hooks/auth/useForgotPasswordForm';
-import { paths } from '../../routes/paths';
-import AuthCountdown from './AuthCountdown';
-import AuthFieldError from './AuthFieldError';
+import { useForgotPasswordForm } from '../../../hooks/auth/recovery/useForgotPasswordForm';
+import AuthCountdown from '../shared/AuthCountdown';
+import AuthFieldError from '../shared/AuthFieldError';
 
 export default function ForgotPasswordForm() {
     const recovery = useForgotPasswordForm();
@@ -14,19 +13,17 @@ export default function ForgotPasswordForm() {
             <div>
                 <label htmlFor="recovery-email" className="block">Correo electrónico</label>
                 <input id="recovery-email" name="email" type="email" autoComplete="email" required maxLength={255}
-                    value={recovery.email} onChange={(event) => recovery.changeEmail(event.target.value)}
-                    className={`mt-1 w-full rounded-lg border px-3 py-2 ${recovery.emailError ? 'border-red-600' : 'border-slate-300'}`}
-                    aria-invalid={recovery.emailError ? true : undefined} aria-describedby={recovery.emailError ? 'auth-email-error' : undefined} />
+                    {...recovery.emailInputProps} />
                 <AuthFieldError field="email" message={recovery.emailError} />
             </div>
             {recovery.formError && <p role="alert" className="text-red-700">{recovery.formError}</p>}
             {recovery.notice && <p role="status" className="text-green-800">{recovery.notice}</p>}
-            <button type="submit" disabled={recovery.pending || recovery.resendIn > 0}
+            <button type="submit" disabled={recovery.submitDisabled}
                 className="w-full rounded-lg bg-blue-700 px-4 py-2 text-white disabled:opacity-50">
-                {recovery.pending ? 'Enviando...' : recovery.notice ? 'Solicitar otro enlace' : 'Enviar enlace'}
+                {recovery.submitLabel}
             </button>
-            {recovery.resendIn > 0 && <p className="text-sm text-slate-600">Puedes solicitar otro enlace en <AuthCountdown seconds={recovery.resendIn} />.</p>}
+            {recovery.showCooldown && <p className="text-sm text-slate-600">Puedes solicitar otro enlace en <AuthCountdown seconds={recovery.resendIn} />.</p>}
         </form>
-        <Link className="mt-4 block text-blue-700" to={paths.login}>Volver a iniciar sesión</Link>
+        <Link className="mt-4 block text-blue-700" to={recovery.loginPath}>Volver a iniciar sesión</Link>
     </>;
 }

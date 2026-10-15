@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useRoleAccess } from '../hooks/auth/useRoleAccess';
+import { useRoleAccess } from '../hooks/auth/session/useRoleAccess';
 import type { RoleRouteProps } from '../types/auth';
 import { paths } from './paths';
 

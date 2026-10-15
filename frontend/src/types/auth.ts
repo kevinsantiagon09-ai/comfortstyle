@@ -1,3 +1,4 @@
+import type { FormEvent } from 'react';
 import type { ApiResponse } from './api';
 
 export type UserRole = 'HUESPED' | 'ANFITRION';
@@ -44,6 +45,26 @@ export type AuthChallengeResponse = ApiResponse<MfaChallenge>;
 export interface MfaVerification {
     challenge_id: string;
     code: string;
+}
+
+export interface MfaChallengeFormProps {
+    challenge: MfaChallenge;
+    code: string;
+    codeError?: string;
+    formError: string;
+    notice: string;
+    expiresIn: number;
+    resendIn: number;
+    pending: boolean;
+    verifying: boolean;
+    resending: boolean;
+    canceling: boolean;
+    blocked: boolean;
+    accountCreated: boolean;
+    onCodeChange: (value: string) => void;
+    onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+    onResend: () => void;
+    onCancel: () => void;
 }
 
 export interface ForgotPasswordData {

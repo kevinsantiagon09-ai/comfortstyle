@@ -1,8 +1,9 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import { isAxiosError } from 'axios';
 import { useSearchParams } from 'react-router-dom';
-import type { ApiErrorBody } from '../../types/api';
-import { isRecoveryEmail, passwordRecoveryNotice, recoveryRetryAfter } from '../../utils/passwordRecovery';
+import { paths } from '../../../routes/paths';
+import type { ApiErrorBody } from '../../../types/api';
+import { isRecoveryEmail, passwordRecoveryNotice, recoveryRetryAfter } from '../../../utils/passwordRecovery';
 import { useForgotPassword } from './useForgotPassword';
 
 export function useForgotPasswordForm() {
@@ -26,8 +27,8 @@ export function useForgotPasswordForm() {
         return () => window.clearInterval(timer);
     }, [resendAvailableAt]);
 
-    const changeEmail = (value: string) => {
-        setEmail(value);
+    const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setEmail(event.target.value);
         setEmailError('');
         setFormError('');
         setNotice('');
@@ -76,5 +77,25 @@ export function useForgotPasswordForm() {
         });
     };
 
-    return { email, emailError, formError, notice, resendIn, pending: mutation.isPending, changeEmail, submit };
+    return {
+        email,
+        emailError,
+        formError,
+        notice,
+        resendIn,
+        pending: mutation.isPending,
+        submitDisabled: mutation.isPending || resendIn > 0,
+        showCooldown: resendIn > 0,
+        submitLabel: mutation.isPending ? 'Enviando...' : notice ? 'Solicitar otro enlace' : 'Enviar enlace',
+        loginPath: paths.login,
+        emailInputProps: {
+            value: email,
+            onChange: handleEmailChange,
+            className: `mt-1 w-full rounded-lg border px-3 py-2 ${emailError ? 'border-red-600' : 'border-slate-300'}`,
+            'aria-invalid': emailError ? true : undefined,
+            'aria-describedby': emailError ? 'auth-email-error' : undefined,
+        },
+        handleEmailChange,
+        submit,
+    };
 }

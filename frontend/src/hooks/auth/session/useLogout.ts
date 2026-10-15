@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import * as authApi from '../../api/auth.api';
-import { queryKeys } from '../../api/queryKeys';
-import { clearPropertySetup } from '../../store/propertySetupStore';
+import * as authApi from '../../../api/auth/auth.api';
+import { queryKeys } from '../../../api/queryKeys';
+import { clearPropertySetup } from '../../../store/propertySetupStore';
 
 /** Cierra la sesión y descarta los datos del usuario que había en caché y en el navegador. */
 export function useLogout() {

@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../hooks/auth/useAuth';
+import { useAuth } from '../hooks/auth/session/useAuth';
 import { paths } from './paths';
 
 export default function ProtectedRoute() {

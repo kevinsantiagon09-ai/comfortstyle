@@ -1,10 +1,10 @@
 import { useState, type FormEvent } from 'react';
 import { isAxiosError } from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { paths } from '../../routes/paths';
-import type { ApiErrorBody } from '../../types/api';
-import type { AuthFieldErrors } from '../../types/auth';
-import { readPasswordRecoveryLink } from '../../utils/passwordRecovery';
+import { forgotPasswordPath, paths } from '../../../routes/paths';
+import type { ApiErrorBody } from '../../../types/api';
+import type { AuthFieldErrors } from '../../../types/auth';
+import { readPasswordRecoveryLink } from '../../../utils/passwordRecovery';
 import { useResetPassword } from './useResetPassword';
 
 export function useResetPasswordForm() {
@@ -77,5 +77,18 @@ export function useResetPasswordForm() {
         });
     };
 
-    return { email, invalidLink: !link.valid || invalidLink, success, fieldErrors, formError, pending: mutation.isPending, clearError, submit };
+    return {
+        invalidLink: !link.valid || invalidLink,
+        invalidLinkMessage: formError || 'El enlace no es válido. Solicita uno nuevo para cambiar tu contraseña.',
+        success,
+        fieldErrors,
+        formError,
+        pending: mutation.isPending,
+        submitDisabled: mutation.isPending || !link.valid || invalidLink || Boolean(success),
+        submitLabel: mutation.isPending ? 'Actualizando...' : 'Guardar nueva contraseña',
+        recoveryPath: forgotPasswordPath(email),
+        loginPath: paths.login,
+        clearError,
+        submit,
+    };
 }

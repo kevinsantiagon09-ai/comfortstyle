@@ -1,7 +1,7 @@
 import { isAxiosError } from 'axios';
-import { ensureCsrfCookie, sessionHttp as http } from './http';
-import type { ApiResponse } from '../types/api';
-import type { AuthChallengeResponse, AuthResponse, AuthUser, ForgotPasswordData, ForgotPasswordResponse, LoginCredentials, MfaVerification, RegisterData, ResetPasswordData, ResetPasswordResponse } from '../types/auth';
+import { ensureCsrfCookie, sessionHttp as http } from '../http';
+import type { ApiResponse } from '../../types/api';
+import type { AuthChallengeResponse, AuthResponse, AuthUser, ForgotPasswordData, ForgotPasswordResponse, LoginCredentials, MfaVerification, RegisterData, ResetPasswordData, ResetPasswordResponse } from '../../types/auth';
 
 /** Renueva CSRF y repite una sola vez cuando la cookie ya no es válida. */
 async function postWithCsrfRetry<T>(path: string, data?: unknown): Promise<T> {

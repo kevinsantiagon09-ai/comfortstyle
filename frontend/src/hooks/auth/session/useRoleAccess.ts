@@ -1,5 +1,5 @@
-import type { UserRole } from '../../types/auth';
-import { hasRole } from '../../utils/auth';
+import type { UserRole } from '../../../types/auth';
+import { hasRole } from '../../../utils/auth';
 import { useAuth } from './useAuth';
 
 export function useRoleAccess(allowedRole: UserRole) {
