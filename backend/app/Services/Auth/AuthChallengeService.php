@@ -216,6 +216,7 @@ class AuthChallengeService
             Log::warning('No se pudo enviar el código de autenticación.', [
                 'user_id' => $user->id,
                 'exception' => $exception::class,
+                'exception_code' => $exception->getCode(),
             ]);
 
             throw new HttpResponseException(response()->json([

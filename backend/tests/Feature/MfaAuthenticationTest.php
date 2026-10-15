@@ -14,12 +14,14 @@ use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use RuntimeException;
+use Symfony\Component\Mailer\Exception\TransportException;
 use Tests\TestCase;
 
 class MfaAuthenticationTest extends TestCase
@@ -252,9 +254,10 @@ class MfaAuthenticationTest extends TestCase
 
     public function test_mail_delivery_failure_does_not_authenticate_or_expose_transport_secrets(): void
     {
+        Log::spy();
         $user = $this->user();
         Mail::shouldReceive('to')->once()->with($user->email)
-            ->andThrow(new RuntimeException('SMTP password: private-app-password'));
+            ->andThrow(new TransportException('SMTP password: private-app-password', 535));
 
         $response = $this->authPost('/login', ['email' => $user->email, 'password' => 'Password123'])
             ->assertStatus(503)
@@ -263,6 +266,14 @@ class MfaAuthenticationTest extends TestCase
         $this->assertStringNotContainsString('private-app-password', $response->getContent());
         $this->assertGuest();
         $this->getJson('/me')->assertUnauthorized();
+        Log::shouldHaveReceived('warning')->once()->with(
+            'No se pudo enviar el código de autenticación.',
+            [
+                'user_id' => $user->id,
+                'exception' => TransportException::class,
+                'exception_code' => 535,
+            ],
+        );
     }
 
     public function test_registration_mail_failure_keeps_account_unauthenticated_and_can_be_recovered_through_login(): void
