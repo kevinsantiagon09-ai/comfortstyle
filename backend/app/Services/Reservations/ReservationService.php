@@ -58,7 +58,6 @@ class ReservationService
                 'check_out' => $data['check_out'],
                 'guests' => $data['guests'],
                 'nights' => $nights,
-                'price_per_night' => $property->price,
                 'total_price' => round((float) $property->price * $nights, 2),
                 'currency' => $property->currency,
                 'status' => Reservation::CONFIRMADA,

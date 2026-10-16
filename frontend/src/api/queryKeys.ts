@@ -12,6 +12,7 @@ export const queryKeys = {
     departments: ['locations', 'departments'] as const,
     cities: (departmentId: string) => ['locations', 'cities', departmentId] as const,
     amenities: ['amenities'] as const,
+    propertyTypes: ['property-types'] as const,
     geocode: (place: string) => ['geocode', place] as const,
     guestReservations: ['guest', 'reservations'] as const,
     guestReservationList: (page: number) => ['guest', 'reservations', page] as const,

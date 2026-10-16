@@ -21,7 +21,6 @@ class Reservation extends Model
         'check_out',
         'guests',
         'nights',
-        'price_per_night',
         'total_price',
         'currency',
         'status',
@@ -34,7 +33,6 @@ class Reservation extends Model
             'check_out' => 'date:Y-m-d',
             'guests' => 'integer',
             'nights' => 'integer',
-            'price_per_night' => 'decimal:2',
             'total_price' => 'decimal:2',
         ];
     }

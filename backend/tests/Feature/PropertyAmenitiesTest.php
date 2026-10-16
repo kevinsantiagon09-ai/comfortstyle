@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Amenity;
 use App\Models\City;
+use App\Models\PropertyType;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,7 +28,7 @@ class PropertyAmenitiesTest extends TestCase
     private function payload(array $overrides = []): array
     {
         return [
-            'name' => 'Casa', 'description' => 'Casa de prueba', 'property_type' => 'Casa', 'address' => 'Calle 1',
+            'name' => 'Casa', 'description' => 'Casa de prueba', 'property_type_id' => PropertyType::factory()->create()->id, 'address' => 'Calle 1',
             'city_id' => City::factory()->create()->id, 'max_guests' => 2, 'price' => 150000,
             'images' => [UploadedFile::fake()->image('casa.jpg')], ...$overrides,
         ];

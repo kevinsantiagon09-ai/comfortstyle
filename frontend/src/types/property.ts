@@ -27,6 +27,7 @@ export interface Property {
     name: string;
     description: string;
     property_type: string;
+    property_type_id: number;
     address: string;
     latitude: string | null;
     longitude: string | null;
@@ -52,7 +53,7 @@ export interface Property {
 export interface PropertyInput {
     name: string;
     description: string;
-    property_type: string;
+    property_type_id: string;
     address: string;
     latitude: string | null;
     longitude: string | null;

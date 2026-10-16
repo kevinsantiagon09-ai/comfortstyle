@@ -21,7 +21,7 @@ export const PHOTOS_STEP = 3;
 
 /** Campos que el backend valida en cada paso. */
 export const STEP_FIELDS: StepField[][] = [
-    ['name', 'property_type', 'description'],
+    ['name', 'property_type_id', 'description'],
     ['city_id', 'address', 'latitude', 'longitude'],
     ['max_guests', 'bedrooms', 'beds', 'bathrooms', 'price', 'currency', 'check_in_time', 'check_out_time'],
     ['images'],
@@ -29,15 +29,13 @@ export const STEP_FIELDS: StepField[][] = [
 ];
 
 export const INITIAL_SETUP_FORM: SetupForm = {
-    name: '', description: '', property_type: 'Casa', address: '', latitude: '', longitude: '', departmentId: '', cityId: '',
+    name: '', description: '', property_type_id: '', address: '', latitude: '', longitude: '', departmentId: '', cityId: '',
     max_guests: '2', bathrooms: '1', bedrooms: '1', beds: '1', price: '', currency: 'COP',
     check_in_time: '15:00', check_out_time: '11:00',
     amenities: [],
 };
 
 export const SETUP_STORAGE_KEY = 'comfortstyle:property-setup';
-
-export const PROPERTY_TYPES = ['Casa', 'Apartamento', 'Cabaña', 'Habitación', 'Finca', 'casa quinta'];
 
 export const CURRENCIES = ['COP', 'USD', 'EUR'];
 

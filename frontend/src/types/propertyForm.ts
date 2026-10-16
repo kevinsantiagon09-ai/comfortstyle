@@ -8,7 +8,7 @@ import type { TabButtonProps } from './ui';
 export interface SetupForm {
     name: string;
     description: string;
-    property_type: string;
+    property_type_id: string;
     address: string;
     latitude: string;
     longitude: string;

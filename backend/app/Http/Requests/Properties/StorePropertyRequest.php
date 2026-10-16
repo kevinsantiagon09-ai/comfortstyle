@@ -43,11 +43,14 @@ class StorePropertyRequest extends FormRequest
                 'max:3000',
             ],
 
-            'property_type' => [
+
+               'property_type_id' => [
                 'required',
-                'string',
-                'max:50',
+                'integer',
+                Rule::exists('property_types', 'id')->where('is_active', true)->whereNull('deleted_at'),
             ],
+
+
 
             'address' => [
                 'required',
@@ -157,7 +160,10 @@ class StorePropertyRequest extends FormRequest
             'name.required' => 'El nombre del alojamiento es obligatorio.',
             'name.max' => 'El nombre no puede superar los 150 caracteres.',
 
-            'description.required' => 'La descripción es obligatoria.',
+            'property_type_id.required' => 'El tipo de propiedad es obligatorio.',
+            'property_type_id.integer' => 'El tipo de propiedad no es válido.',
+            'property_type_id.exists' => 'El tipo de propiedad seleccionado no es válido.',
+
             'description.max' => 'La descripción no puede superar los 3000 caracteres.',
 
             'property_type.required' => 'El tipo de propiedad es obligatorio.',

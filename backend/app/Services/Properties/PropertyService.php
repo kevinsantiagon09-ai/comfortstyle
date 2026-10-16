@@ -19,6 +19,7 @@ class PropertyService
         return Property::query()->when($ownerId !== null, fn ($query) => $query->where('user_id', $ownerId))
             ->with([
                 'location.department',
+                'type',
                 'host:id,uuid,name,email',
                 'amenities:id,name,category,icon',
 
@@ -35,11 +36,7 @@ class PropertyService
                 $query->where(function ($subQuery) use ($search) {
                     $subQuery
                         ->where('name', 'ilike', "%{$search}%")
-                        ->orWhere(
-                            'property_type',
-                            'ilike',
-                            "%{$search}%"
-                        )
+                        ->orWhereHas('type', fn ($type) => $type->where('name', 'ilike', "%{$search}%"))
                         ->orWhereHas('location', fn ($location) => $location->where('name', 'ilike', "%{$search}%"))
                         ->orWhereHas('location.department', fn ($department) => $department->where('name', 'ilike', "%{$search}%"));
                 });
@@ -76,7 +73,7 @@ class PropertyService
                 }
 
                 return $property->load(
-                    'host:id,uuid,name,email', 'location.department', 'images', 'amenities:id,name,category,icon'
+                    'host:id,uuid,name,email', 'location.department', 'type', 'images', 'amenities:id,name,category,icon'
                 );
             });
         } catch (Throwable $exception) {
@@ -89,7 +86,7 @@ class PropertyService
     public function find(Property $property): Property
     {
         return $property->load(
-            'host:id,uuid,name,email', 'location.department', 'images', 'amenities:id,name,category,icon'
+            'host:id,uuid,name,email', 'location.department', 'type', 'images', 'amenities:id,name,category,icon'
         );
     }
 
@@ -107,7 +104,7 @@ class PropertyService
 
                 return $property
                     ->fresh()
-                    ->load('host:id,uuid,name,email', 'location.department', 'images', 'amenities:id,name,category,icon');
+                    ->load('host:id,uuid,name,email', 'location.department', 'type', 'images', 'amenities:id,name,category,icon');
             }
         );
     }

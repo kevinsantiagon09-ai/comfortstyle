@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             EstadoSeeder::class,
             AmenitySeeder::class,
+            PropertyTypeSeeder::class,
             AdminUserSeeder::class,
         ]);
     }

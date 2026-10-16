@@ -43,12 +43,14 @@ class UpdatePropertyRequest extends FormRequest
                 'max:3000',
             ],
 
-            'property_type' => [
+                'property_type_id' => [
                 'sometimes',
                 'required',
-                'string',
-                'max:50',
+                'integer',
+                Rule::exists('property_types', 'id')->where('is_active', true)->whereNull('deleted_at'),
             ],
+
+
 
             'address' => [
                 'sometimes',
@@ -157,9 +159,10 @@ class UpdatePropertyRequest extends FormRequest
 
             'description.required' => 'La descripción es obligatoria.',
             'description.string' => 'La descripción debe ser una cadena de texto.',
-            'description.max' => 'La descripción no puede superar los 3000 caracteres.',
+            'property_type_id.required' => 'El tipo de propiedad es obligatorio.',
+            'property_type_id.integer' => 'El tipo de propiedad no es válido.',
+            'property_type_id.exists' => 'El tipo de propiedad seleccionado no es válido.',
 
-            'property_type.required' => 'El tipo de propiedad es obligatorio.',
             'property_type.string' => 'El tipo de propiedad debe ser texto.',
             'property_type.max' => 'El tipo de propiedad no puede superar los 50 caracteres.',
 

@@ -18,18 +18,28 @@ class Property extends Model
     /** Máximo admitido por la columna price, decimal(12,2). */
     public const MAX_PRICE = 9999999999.99;
 
-    protected $appends = ['city', 'department', 'department_id'];
+    protected $appends = ['city', 'department', 'department_id', 'property_type'];
 
-    protected $hidden = ['location'];
+    protected $hidden = ['location', 'type'];
 
     public function location(): BelongsTo
     {
         return $this->belongsTo(City::class, 'city_id');
     }
 
+    public function type(): BelongsTo
+    {
+        return $this->belongsTo(PropertyType::class, 'property_type_id');
+    }
+
     public function getCityAttribute(): ?string
     {
         return $this->location?->name;
+    }
+
+    public function getPropertyTypeAttribute(): ?string
+    {
+        return $this->type?->name;
     }
 
     public function getDepartmentIdAttribute(): ?int
@@ -47,7 +57,7 @@ class Property extends Model
         'user_id',
         'name',
         'description',
-        'property_type',
+        'property_type_id',
         'address',
         'city_id',
         'latitude',

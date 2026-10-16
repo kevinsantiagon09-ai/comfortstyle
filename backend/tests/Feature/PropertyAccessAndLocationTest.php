@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\City;
 use App\Models\Property;
+use App\Models\PropertyType;
 use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\LocationSeeder;
@@ -61,7 +62,7 @@ class PropertyAccessAndLocationTest extends TestCase
         $host = $this->userWithRole('ANFITRION');
         $city = City::factory()->create();
         Storage::fake('public');
-        $data = ['name' => 'Casa', 'description' => 'Casa de prueba', 'property_type' => 'Casa', 'address' => 'Calle 1', 'city_id' => $city->id, 'max_guests' => 2, 'price' => 100, 'images' => [UploadedFile::fake()->image('casa.jpg')]];
+        $data = ['name' => 'Casa', 'description' => 'Casa de prueba', 'property_type_id' => PropertyType::factory()->create()->id, 'address' => 'Calle 1', 'city_id' => $city->id, 'max_guests' => 2, 'price' => 100, 'images' => [UploadedFile::fake()->image('casa.jpg')]];
         $this->actingAs($host)->postJson('/api/property', $data)->assertCreated()->assertJsonPath('data.user_id', $host->id)->assertJsonPath('data.city', $city->name)->assertJsonPath('data.department', $city->department->name);
         $this->postJson('/api/property', [...$data, 'city_id' => 999999])->assertUnprocessable();
         $this->postJson('/api/property', [...$data, 'user_id' => $host->id])->assertUnprocessable();
@@ -71,7 +72,7 @@ class PropertyAccessAndLocationTest extends TestCase
     {
         Storage::fake('public');
         $host = $this->userWithRole('ANFITRION');
-        $data = ['name' => 'Casa', 'description' => 'Casa de prueba', 'property_type' => 'Casa', 'address' => 'Calle 1', 'city_id' => City::factory()->create()->id, 'max_guests' => 2, 'price' => 100];
+        $data = ['name' => 'Casa', 'description' => 'Casa de prueba', 'property_type_id' => PropertyType::factory()->create()->id, 'address' => 'Calle 1', 'city_id' => City::factory()->create()->id, 'max_guests' => 2, 'price' => 100];
 
         $this->actingAs($host)->postJson('/api/property', $data)->assertUnprocessable()->assertJsonValidationErrors('images');
         $this->postJson('/api/property', [...$data, 'images' => [UploadedFile::fake()->create('doc.pdf', 10, 'application/pdf')]])->assertUnprocessable()->assertJsonValidationErrors('images.0');
@@ -88,9 +89,11 @@ class PropertyAccessAndLocationTest extends TestCase
         $host = $this->userWithRole('ANFITRION');
         $precognitive = fn (string $fields) => ['Precognition' => 'true', 'Precognition-Validate-Only' => $fields];
 
-        $this->actingAs($host)->postJson('/api/property', ['name' => '', 'city_id' => 999999], $precognitive('name,description,property_type'))
-            ->assertUnprocessable()->assertJsonValidationErrors(['name', 'description', 'property_type'])->assertJsonMissingValidationErrors('city_id');
-        $this->postJson('/api/property', ['name' => 'Casa', 'description' => 'Linda', 'property_type' => 'Casa'], $precognitive('name,description,property_type'))
+        $this->actingAs($host)->postJson('/api/property', ['name' => '', 'city_id' => 999999], $precognitive('name,description,property_type_id'))
+            ->assertUnprocessable()->assertJsonValidationErrors(['name', 'description', 'property_type_id'])->assertJsonMissingValidationErrors('city_id');
+        $this->postJson('/api/property', ['name' => 'Casa', 'description' => 'Linda', 'property_type_id' => PropertyType::factory()->create()->id], $precognitive('name,description,property_type_id'))
+
+
             ->assertNoContent()->assertHeader('Precognition-Success', 'true');
         $this->assertDatabaseCount('properties', 0);
     }

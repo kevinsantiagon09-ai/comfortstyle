@@ -11,7 +11,6 @@ export interface Reservation {
     check_out: string;
     guests: number;
     nights: number;
-    price_per_night: string;
     total_price: string;
     currency: string;
     status: ReservationStatus;

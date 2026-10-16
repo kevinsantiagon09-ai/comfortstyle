@@ -21,6 +21,7 @@ class PublicPropertyController extends Controller
                 },
                 'host:id,uuid,name',
                 'location.department',
+                'type',
             ])
             ->when(
                 $request->filled('city'),
@@ -50,6 +51,7 @@ class PublicPropertyController extends Controller
                         ->orderBy('display_order');
                 },
                 'location.department',
+                'type',
             ])
             ->latest()
             ->limit(500)
@@ -79,6 +81,7 @@ class PublicPropertyController extends Controller
             'data' => $property->load([
                 'host:id,uuid,name',
                 'location.department',
+                'type',
                 'amenities:id,name,category,icon',
                 'panoramas:id,property_id,title,image_path,preview_path,display_order',
                 'images' => function ($query) {

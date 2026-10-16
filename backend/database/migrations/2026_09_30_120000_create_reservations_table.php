@@ -21,7 +21,6 @@ return new class extends Migration
             $table->date('check_out');
             $table->unsignedSmallInteger('guests');
             $table->unsignedSmallInteger('nights');
-            $table->decimal('price_per_night', 12, 2);
             $table->decimal('total_price', 14, 2);
             $table->string('currency', 3);
             $table->string('status', 20)->default('CONFIRMADA');
@@ -37,3 +36,5 @@ return new class extends Migration
         Schema::dropIfExists('reservations');
     }
 };
+
+
