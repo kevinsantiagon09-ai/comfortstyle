@@ -37,7 +37,7 @@ export const INITIAL_SETUP_FORM: SetupForm = {
 
 export const SETUP_STORAGE_KEY = 'comfortstyle:property-setup';
 
-export const PROPERTY_TYPES = ['Casa', 'Apartamento', 'Cabaña', 'Habitación', 'Finca'];
+export const PROPERTY_TYPES = ['Casa', 'Apartamento', 'Cabaña', 'Habitación', 'Finca', 'casa quinta'];
 
 export const CURRENCIES = ['COP', 'USD', 'EUR'];
 

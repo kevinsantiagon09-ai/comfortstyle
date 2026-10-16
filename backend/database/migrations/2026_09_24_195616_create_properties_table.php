@@ -19,7 +19,7 @@ return new class extends Migration
                 ->restrictOnDelete();
             $table->string('name', 150);
             $table->text('description');
-            $table->string('property_type', 50); // Tipo de propiedades tabla  pibote
+            $table->string('property_type', 50); 
             $table->string('address', 255);
             $table->foreignId('city_id')->constrained()->restrictOnDelete();
             $table->unsignedSmallInteger('max_guests');
