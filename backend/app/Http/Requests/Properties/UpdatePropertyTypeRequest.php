@@ -20,7 +20,9 @@ class UpdatePropertyTypeRequest extends FormRequest
                 'required',
                 'string',
                 'max:50',
-                Rule::unique('property_types', 'name')->ignore($this->route('property_type')),
+                Rule::unique('property_types', 'name')
+                    ->ignore($this->route('property_type'))
+                    ->where('user_id', $this->route('property_type')->user_id),
             ],
             'description' => [
                 'nullable',

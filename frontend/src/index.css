@@ -1,5 +1,22 @@
 @import "tailwindcss";
 
+/* Tipografía de toda la app: Manrope, con la del sistema mientras carga. */
+@theme {
+    --font-sans: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@layer base {
+    html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+    }
+
+    h1, h2, h3 {
+        letter-spacing: -0.02em;
+    }
+}
+
 /* Vista previa 360°: desplaza la foto equirectangular en bucle para simular que gira.
    La imagen mide el doble de ancho que de alto, así que un ciclo completo es -2 × la altura (--pano-h). */
 @keyframes pano-pan {
@@ -24,8 +41,18 @@
     animation: tour-in 0.35s ease-out;
 }
 
+/* Aviso de notificación: entra deslizándose desde abajo. */
+@keyframes toast-in {
+    from { opacity: 0; transform: translateY(12px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.toast-in {
+    animation: toast-in 0.3s ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
-    .pano-preview, .tour-in { animation: none; }
+    .pano-preview, .tour-in, .toast-in { animation: none; }
 }
 
 /* Explorador del entorno: la casa emite ondas de radar y los demás alojamientos se ven como etiquetas de precio. */

@@ -1,60 +1,25 @@
-import PropertyCard from '../../components/properties/PropertyCard';
-import { usePublicProperties } from '../../hooks/properties/usePublicProperties';
+import HomeCategorySwitcher from '../../components/home/HomeCategorySwitcher';
+import HomeHero from '../../components/home/HomeHero';
+import HomeProperties from '../../components/home/HomeProperties';
+import ServicesShowcase from '../../components/home/ServicesShowcase';
+import { HOME_PREVIEW_LIMIT } from '../../constants/home';
+import { useHomePage } from '../../hooks/home/useHomePage';
 
 export default function HomePage() {
-    const {
-        properties,
-        loading,
-        error,
-        reload,
-    } = usePublicProperties();
+    const { mode, firstName, category, selectCategory, properties, propertyCount } = useHomePage();
+    const listProps = { properties: properties.properties, loading: properties.loading, error: properties.error, onRetry: () => void properties.reload() };
 
-    return (
-        <>
-            <section className="mb-8">
-                <h1 className="text-3xl font-bold text-slate-900">
-                    Encuentra un alojamiento cómodo
-                </h1>
+    return <div className="space-y-10">
+        <HomeHero mode={mode} firstName={firstName} onExplore={() => selectCategory('hospedajes')} />
+        <HomeCategorySwitcher active={category} onSelect={selectCategory} propertyCount={propertyCount} />
 
-                <p className="mt-2 text-slate-600">
-                    Explora alojamientos y experiencias en tu destino.
-                </p>
-            </section>
-
-            {loading && (
-                <p className="text-slate-600">
-                    Cargando alojamientos...
-                </p>
-            )}
-
-            {error && (
-                <div className="rounded-xl bg-red-50 p-4 text-red-700">
-                    <p>{error}</p>
-
-                    <button
-                        type="button"
-                        onClick={() => void reload()}
-                        className="mt-3 rounded-lg bg-red-600 px-4 py-2 text-white"
-                    >
-                        Reintentar
-                    </button>
-                </div>
-            )}
-
-            {!loading && !error && properties.length === 0 && (
-                <p>No existen alojamientos disponibles.</p>
-            )}
-
-            {!loading && !error && (
-                <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {properties.map((property) => (
-                        <PropertyCard
-                            key={property.id}
-                            property={property}
-                        />
-                    ))}
-                </section>
-            )}
-        </>
-    );
+        <div role="tabpanel" className="space-y-12">
+            {category === 'todo' && <>
+                <HomeProperties {...listProps} limit={HOME_PREVIEW_LIMIT} onSeeAll={() => selectCategory('hospedajes')} />
+                <ServicesShowcase variant="teaser" onOpen={() => selectCategory('servicios')} />
+            </>}
+            {category === 'hospedajes' && <HomeProperties {...listProps} />}
+            {category === 'servicios' && <ServicesShowcase variant="full" />}
+        </div>
+    </div>;
 }

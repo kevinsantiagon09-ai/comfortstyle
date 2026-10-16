@@ -70,6 +70,10 @@ export interface PropertyInput {
 }
 
 // Props de componentes
+export interface PropertyVisibilityToggleProps {
+    property: Property;
+}
+
 export interface PropertyCardProps {
     property: Property;
 }

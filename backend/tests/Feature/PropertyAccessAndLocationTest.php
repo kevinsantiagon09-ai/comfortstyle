@@ -150,4 +150,21 @@ class PropertyAccessAndLocationTest extends TestCase
         $this->actingAs($host)->patchJson('/api/property-images/'.$image->id, ['property_id' => $other->id])->assertUnprocessable();
         $this->postJson('/api/property-images', ['property_id' => $other->id, 'image' => UploadedFile::fake()->image('image.jpg')])->assertForbidden();
     }
+
+    public function test_host_hides_and_republishes_their_property(): void
+    {
+        $host = $this->userWithRole('ANFITRION');
+        $property = Property::factory()->for($host, 'host')->create(['is_active' => true]);
+
+        $this->actingAs($host)->patchJson("/api/property/{$property->uuid}", ['is_active' => false])
+            ->assertOk()->assertJsonPath('data.is_active', false);
+        $this->getJson("/api/public/properties/{$property->uuid}")->assertNotFound();
+        $this->getJson('/api/public/properties')->assertJsonMissing(['uuid' => $property->uuid]);
+
+        $this->patchJson("/api/property/{$property->uuid}", ['is_active' => true])->assertOk();
+        $this->getJson("/api/public/properties/{$property->uuid}")->assertOk();
+
+        $this->actingAs($this->userWithRole('ANFITRION'))
+            ->patchJson("/api/property/{$property->uuid}", ['is_active' => false])->assertForbidden();
+    }
 }

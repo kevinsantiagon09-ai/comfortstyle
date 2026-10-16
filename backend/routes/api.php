@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Locations\LocationController;
+use App\Http\Controllers\Notifications\NotificationController;
 use App\Http\Controllers\Properties\AmenityController;
+use App\Http\Controllers\Properties\HostPropertyTypeController;
 use App\Http\Controllers\Properties\PropertyController;
 use App\Http\Controllers\Properties\PropertyImageController;
 use App\Http\Controllers\Properties\PropertyPanoramaController;
@@ -19,6 +21,11 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('notifications', [NotificationController::class, 'index']);
+    Route::patch('notifications/read-all', [NotificationController::class, 'readAll']);
+    Route::patch('notifications/{notification}/read', [NotificationController::class, 'read'])->whereUuid('notification');
+});
 Route::middleware(['auth:sanctum', 'role:SYSTEM_ADMIN'])->group(function () {
     Route::apiResource('roles', RoleController::class)->except(['destroy']);
     Route::apiResource('estados', EstadoController::class)->except(['destroy']);
@@ -32,6 +39,9 @@ Route::middleware(['auth:sanctum', 'role:ANFITRION'])->group(function () {
     Route::apiResource('property', PropertyController::class)->except(['destroy'])->scoped(['property' => 'uuid'])->middleware(HandlePrecognitiveRequests::class);
     Route::apiResource('property-images', PropertyImageController::class)->except(['destroy']);
     Route::apiResource('property-panoramas', PropertyPanoramaController::class)->only(['index', 'store', 'destroy']);
+    Route::get('host/property-types', [HostPropertyTypeController::class, 'index']);
+    Route::post('host/property-types', [HostPropertyTypeController::class, 'store']);
+    Route::patch('host/property-types/{propertyType:uuid}', [HostPropertyTypeController::class, 'update']);
 });
 Route::middleware(['auth:sanctum', 'role:HUESPED'])->group(function () {
     Route::get('reservations', [ReservationController::class, 'index']);

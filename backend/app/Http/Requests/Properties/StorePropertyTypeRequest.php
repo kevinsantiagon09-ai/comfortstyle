@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Properties;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePropertyTypeRequest extends FormRequest
 {
@@ -18,7 +19,7 @@ class StorePropertyTypeRequest extends FormRequest
                 'required',
                 'string',
                 'max:50',
-                'unique:property_types,name',
+                Rule::unique('property_types', 'name')->whereNull('user_id'),
             ],
             'description' => [
                 'nullable',

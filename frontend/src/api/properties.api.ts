@@ -52,6 +52,11 @@ export async function updateProperty(uuid: string, data: PropertyInput) {
 }
 
 export async function publishProperty(uuid: string) {
+    return setPropertyVisibility(uuid, true);
+}
+
+/** Publica u oculta el alojamiento. Oculto no aparece en el catálogo ni en el mapa y no acepta reservas nuevas. */
+export async function setPropertyVisibility(uuid: string, isActive: boolean) {
     await ensureCsrfCookie();
-    return (await http.patch<ApiResponse<Property>>(`/property/${uuid}`, { is_active: true })).data.data;
+    return (await http.patch<ApiResponse<Property>>(`/property/${uuid}`, { is_active: isActive })).data.data;
 }

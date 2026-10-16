@@ -47,7 +47,8 @@ class UpdatePropertyRequest extends FormRequest
                 'sometimes',
                 'required',
                 'integer',
-                Rule::exists('property_types', 'id')->where('is_active', true)->whereNull('deleted_at'),
+                Rule::exists('property_types', 'id')->where('is_active', true)->whereNull('deleted_at')
+                    ->where(fn ($query) => $query->whereNull('user_id')->orWhere('user_id', $this->user()?->id)),
             ],
 
 

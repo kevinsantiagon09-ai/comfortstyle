@@ -14,6 +14,10 @@ class ReservationService
 {
     private const RELATIONS = ['property.location.department', 'property.images'];
 
+    public function __construct(
+        private readonly ReservationNotifier $notifier
+    ) {}
+
     public function listForGuest(int $userId, int $perPage = 10): LengthAwarePaginator
     {
         return Reservation::query()
@@ -29,7 +33,7 @@ class ReservationService
      */
     public function create(User $guest, array $data): Reservation
     {
-        return DB::transaction(function () use ($guest, $data): Reservation {
+        $reservation = DB::transaction(function () use ($guest, $data): Reservation {
             $property = Property::whereKey($data['property_id'])->lockForUpdate()->firstOrFail();
 
             if (! $property->is_active) {
@@ -63,6 +67,11 @@ class ReservationService
                 'status' => Reservation::CONFIRMADA,
             ])->load(self::RELATIONS);
         });
+
+        // Después del commit: así nunca se avisa de una reserva que terminó revirtiéndose.
+        $this->notifier->created($reservation);
+
+        return $reservation;
     }
 
     public function cancel(Reservation $reservation): Reservation
@@ -75,6 +84,7 @@ class ReservationService
         }
 
         $reservation->update(['status' => Reservation::CANCELADA]);
+        $this->notifier->cancelled($reservation);
 
         return $reservation->fresh()->load(self::RELATIONS);
     }
